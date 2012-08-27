@@ -7,7 +7,7 @@ module Hive
 
   class Beehives < Hash
 
-    BEHIVE_DIR = "beehives"
+    BEEHIVE_DIR = "beehives"
 
     def initialize
     end
@@ -25,7 +25,7 @@ module Hive
     end
 
     def self.load(hive = nil)
-      beehives = Dir.glob("#{Queen::ROOT}/#{BEHIVE_DIR}/*")
+      beehives = Dir.glob("#{Queen::ROOT}/#{BEEHIVE_DIR}/*")
 
       to_load = all
 
@@ -48,7 +48,7 @@ module Hive
   end
 
   module BeehiveValidator
-    BEEHIVE_DIRECTORIES = %w'beehive lib public spec tmp'
+    BEEHIVE_DIRECTORIES = %w'beehive config lib public spec tmp'
 
     BEEHIVE_APP_FILES   = %w'controller helper layout public view start.rb'
 
@@ -78,6 +78,10 @@ module Hive
 
     def validate
       extend(BeehiveValidator).validate
+    end
+
+    def assets
+      @assets ||= BeehiveAssets.new(self)
     end
 
   end

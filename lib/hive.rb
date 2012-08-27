@@ -46,6 +46,7 @@ module Hive
 
   require "queen"
   require "beehives"
+  require "assets"
   
 end
 
