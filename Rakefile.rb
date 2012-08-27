@@ -16,8 +16,21 @@ task :test_assets do
 
   #p hive.assets.beehive_specific
 
-  puts 
   pp hive.assets.config.port
+end
+
+
+task :start do
+  hive = (ENV["HIVE"] or "test").to_sym
+
+  Queen::hives.load(hive)
+  hive = Queen::hives[hive]
+  hive.assets.read
+  
+  #p 1
+  #p hive.config.port
+  p hive.stylesheet_for_app
+  hive.standalone!
 end
 
 =begin

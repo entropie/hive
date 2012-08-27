@@ -9,6 +9,9 @@ module Hive
 
     class Config
       attr_accessor :port
+      attr_accessor :css
+      attr_accessor :sass
+      attr_accessor :js
 
       def method_missing(m, *args)
         self.send("#{m}=", *args)

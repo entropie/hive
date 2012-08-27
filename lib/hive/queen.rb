@@ -8,11 +8,34 @@ module Hive
 
     ROOT = Source
 
+    class Config
+      def engine
+        :Haml
+      end
+
+      def layout
+        "layout"
+      end
+
+    end
+
     def self.hives
       ::Beehives
     end
 
     def self.assets
+    end
+
+    def config
+      @config ||= Config.new
+    end
+
+    def self.controller(&blk)
+      Dir.glob("#{Source.join("queen/controller")}/*.rb").each(&blk)
+    end
+
+    def self.ramaze_opts
+      { :adapter => :mongrel }
     end
   end
 end

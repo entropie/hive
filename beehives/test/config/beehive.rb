@@ -5,6 +5,12 @@
 
 setup do |c|
   c.port        = 9000
+
+  c.css         = [
+                   [:screen, "bootstrap.min.css"], [:screen, "test.css"]
+                  ]
+
+  c.js          =   ["jquery.min.js", "application.js"]
 end
 
 =begin

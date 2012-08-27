@@ -76,12 +76,79 @@ module Hive
       @path = path
     end
 
+    def identifier
+      @identifier ||= File.basename(path).to_sym
+    end
+
+    def mode
+      :dev
+    end
+
     def validate
       extend(BeehiveValidator).validate
     end
 
     def assets
       @assets ||= BeehiveAssets.new(self)
+    end
+
+    def queen
+      Queen
+    end
+
+    def config
+      @config ||= assets.config
+    end
+
+    def controller(&blk)
+      Dir.glob("#{path}/beehive/controller/*.rb").each(&blk)
+    end
+
+    def stylesheet_for_app
+      config.css.map{ |ss|
+        "<link rel='stylesheet' rel='#{ss.first}' type='text/css' href='/css/#{ ss.last }' />"
+      }.join("\n")
+    end
+
+    def javascripts_for_app
+      config.js.map{ |ss|
+        "<script src='/js/#{ ss }'></script>"
+      }.join("\n")
+    end
+
+    def standalone!
+      Queen.const_set("BEEHIVE", self)
+
+      Ramaze.options.session.key = self.identifier
+
+      debug "starting #{identifier} in +++#{mode}+++"
+      debug ""
+      debug ""
+      debug "asking queen for global enviroment..."
+
+      queen.controller do |queen_controller|
+        debug "   queen controller: loading '#{queen_controller}'"
+        require queen_controller
+      end
+
+      controller do |beehive_controller|
+        debug " beehive controller: loading '#{beehive_controller}' [#{identifier}]"
+        require beehive_controller
+      end
+
+      debug ""
+      debug ""
+
+      roots = [Queen::ROOT.join("queen")]
+      roots.push(File.join(path, "beehive"))
+
+      # views = [] #Queen::ROOT.join("queen", "view")
+      # #views.push(File.join(path, "beehive", "view"))
+      # Ramaze.options.views = ["view"]
+
+      Ramaze.start(Queen.ramaze_opts.
+                   merge(:port => config.port,
+                         :root => roots))
     end
 
   end
