@@ -3,8 +3,6 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-require "lib/hive.rb"
-
 
 =begin
 Local Variables:

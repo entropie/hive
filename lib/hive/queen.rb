@@ -3,8 +3,20 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-require "lib/hive.rb"
+module Hive
+  module Queen
 
+    ROOT = Source
+
+    def self.hives
+      ::Beehives
+    end
+
+    def self.assets
+    end
+
+  end
+end
 
 =begin
 Local Variables:

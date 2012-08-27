@@ -3,8 +3,13 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-require "lib/hive.rb"
+require 'bacon'
+require File.join(File.dirname(File.expand_path($0)), "../lib/hive")
 
+include Hive
+
+
+Bacon.summary_on_exit
 
 =begin
 Local Variables:
