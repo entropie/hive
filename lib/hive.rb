@@ -28,7 +28,7 @@ module Hive
 
 
   def debug(str)
-    puts ">>> #{str}"
+    puts "#{str.empty? ? "  " : "->" } #{str}"
   end
 
   QUEEN_LIBRARIES =
@@ -47,7 +47,7 @@ module Hive
   require "queen"
   require "beehives"
   require "assets"
-  
+
 end
 
 =begin

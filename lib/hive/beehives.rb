@@ -37,6 +37,7 @@ module Hive
           next
         end
 
+        debug ""
         debug "loading beehive: '#{symb}'"
         if not hive or (hive and File.basename(hv) == hive.to_s)
           m[symb] = Beehive.new(hv)
@@ -111,9 +112,7 @@ module Hive
     end
 
     def javascripts_for_app
-      config.js.map{ |ss|
-        "<script src='/js/#{ ss }'></script>"
-      }.join("\n")
+      config.js.map{ |ss| "<script type='text/javascript' src='/js/#{ ss }'></script>" }.join("\n")
     end
 
     def standalone!
@@ -121,15 +120,14 @@ module Hive
 
       Ramaze.options.session.key = self.identifier
 
-      debug "starting #{identifier} in +++#{mode}+++"
-      debug ""
-      debug ""
       debug "asking queen for global enviroment..."
 
       queen.controller do |queen_controller|
         debug "   queen controller: loading '#{queen_controller}'"
         require queen_controller
       end
+
+      debug "calling beehive supervisors..."
 
       controller do |beehive_controller|
         debug " beehive controller: loading '#{beehive_controller}' [#{identifier}]"
@@ -145,6 +143,10 @@ module Hive
       # views = [] #Queen::ROOT.join("queen", "view")
       # #views.push(File.join(path, "beehive", "view"))
       # Ramaze.options.views = ["view"]
+
+      debug "starting #{identifier} in +++#{mode}+++"
+      debug ""
+      debug ""
 
       Ramaze.start(Queen.ramaze_opts.
                    merge(:port => config.port,

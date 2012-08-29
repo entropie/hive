@@ -29,7 +29,7 @@ task :start do
   
   #p 1
   #p hive.config.port
-  p hive.stylesheet_for_app
+  #p hive.stylesheet_for_app
   hive.standalone!
 end
 

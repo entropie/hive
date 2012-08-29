@@ -8,10 +8,6 @@ class TestController < QueenController
   map "/test"
 
   def index
-    p Ramaze.options.roots
-    p Ramaze.options.views
-    p Ramaze.options.publics
-    "Hallo from test!"
   end
 
   def lala
