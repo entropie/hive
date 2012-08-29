@@ -11,6 +11,7 @@ setup do |c|
                   ]
 
   c.js          =   ["jquery.min.js", "application.js"]
+
 end
 
 =begin

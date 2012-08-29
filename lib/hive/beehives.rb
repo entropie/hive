@@ -112,7 +112,7 @@ module Hive
     end
 
     def javascripts_for_app
-      config.js.map{ |ss| "<script type='text/javascript' src='/js/#{ ss }'></script>" }.join("\n")
+      config.js.map{ |js| "<script type='text/javascript' src='/js/#{ js }'></script>" }.join("\n")
     end
 
     def standalone!
@@ -134,19 +134,15 @@ module Hive
         require beehive_controller
       end
 
-      debug ""
-      debug ""
+      debug
+      debug
 
       roots = [Queen::ROOT.join("queen")]
       roots.push(File.join(path, "beehive"))
 
-      # views = [] #Queen::ROOT.join("queen", "view")
-      # #views.push(File.join(path, "beehive", "view"))
-      # Ramaze.options.views = ["view"]
-
       debug "starting #{identifier} in +++#{mode}+++"
-      debug ""
-      debug ""
+      debug
+      debug
 
       Ramaze.start(Queen.ramaze_opts.
                    merge(:port => config.port,

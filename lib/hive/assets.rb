@@ -13,6 +13,12 @@ module Hive
       attr_accessor :sass
       attr_accessor :js
 
+      attr_reader   :beehive
+
+      def initialize(beehive)
+        @beehive = beehive
+      end
+
       def method_missing(m, *args)
         self.send("#{m}=", *args)
       end
@@ -25,7 +31,7 @@ module Hive
     end
 
     def config
-      @config ||= Config.new
+      @config ||= Config.new(beehive)
     end
 
     def beehive_specific

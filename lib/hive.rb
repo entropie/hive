@@ -27,7 +27,7 @@ module Hive
   require "ramaze"
 
 
-  def debug(str)
+  def debug(str = "")
     puts "#{str.empty? ? "  " : "->" } #{str}"
   end
 
