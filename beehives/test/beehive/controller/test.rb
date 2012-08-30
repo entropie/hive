@@ -12,6 +12,11 @@ class TestController < QueenController
 
   def lala
   end
+
+  def _ajax
+    Faker::Lorem.paragraph
+  end
+
 end
 
 

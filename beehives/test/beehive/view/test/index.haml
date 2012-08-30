@@ -1,13 +1,23 @@
-.container
-
-  %h1 Hello from test w/ template
-
+%h1
+  Hello from
+  %strong test
   - if logged_in?
+    %small
+      Hello <i>#{current_user}</i>, how's it going?
+%hr
+.row
+  .span6
+    %h2 Some tests
+
     .row
       .span6
-        %h1 hello #{current_user}
-  - else
-    .row
-      .span6
-        %p
-          %a{:href => AuthController.r(:login)} Login
+        .well
+          %h6 Ajax
+          %p#ajax-test
+            Not loaded yet.
+
+          %p
+            %button#ajax-test-btn.btn.btn-primary{:href => TestController.r(:_ajax)} Load Something
+            %a{:href => TestController.r(:_ajax)}
+              %button.btn Visit Page
+            

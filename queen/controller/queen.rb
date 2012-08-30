@@ -21,7 +21,7 @@ class QueenController < Ramaze::Controller
   extend        Queen
 
   engine        :Haml #config.engine
-  layout        config.layout
+  layout(config.layout) { !request.xhr? }
 
   helper        :user
 

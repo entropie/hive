@@ -101,18 +101,22 @@ module Hive
       @config ||= assets.config
     end
 
+    def static_url_apendix
+      Time.now.usec
+    end
+
     def controller(&blk)
       Dir.glob("#{path}/beehive/controller/*.rb").each(&blk)
     end
 
     def stylesheet_for_app
       config.css.map{ |ss|
-        "<link rel='stylesheet' rel='#{ss.first}' type='text/css' href='/css/#{ ss.last }' />"
+        "<link rel='stylesheet' rel='#{ss.first}' type='text/css' href='/css/#{ ss.last }?#{static_url_apendix}' />"
       }.join("\n")
     end
 
     def javascripts_for_app
-      config.js.map{ |js| "<script type='text/javascript' src='/js/#{ js }'></script>" }.join("\n")
+      config.js.map{ |js| "<script type='text/javascript' src='/js/#{ js }?#{static_url_apendix}'></script>" }.join("\n")
     end
 
     def view_path
@@ -121,7 +125,7 @@ module Hive
 
 
     def ramaze_opts
-      roots = [ Queen::ROOT.join("queen"), File.join(path, "beehive") ]
+      roots = [ Queen::ROOT.join("queen"), File.join(path, "beehive") ].reverse
 
       opts = Queen.ramaze_opts.merge(:port => config.port,
                                      :root => roots,

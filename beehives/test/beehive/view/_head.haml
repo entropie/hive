@@ -1,0 +1,14 @@
+.container
+  .navbar
+    .navbar-inner
+      %a.brand{:href => TestController.r(:index)} Test Bitch!
+      %ul.nav
+        %li
+          %a{:href => TestController.r(:lala)} Foobar
+
+      %ul.nav.pull-right
+        %li
+          - if logged_in?
+            %a{:href => AuthController.r(:logout, :r => TestController.r(:index))} Logout
+          - else
+            %a{:href => AuthController.r(:login)} Login
