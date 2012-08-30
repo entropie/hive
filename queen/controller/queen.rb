@@ -17,6 +17,7 @@ end
 
 class QueenController < Ramaze::Controller
 
+  include       Queen
   extend        Queen
 
   engine        :Haml #config.engine
@@ -30,6 +31,10 @@ class QueenController < Ramaze::Controller
 
   def javascript_for_app
     Queen::BEEHIVE.javascripts_for_app
+  end
+
+  def beehive_render_file(file, opts = { })
+    render_file(File.join(BEEHIVE.view_path, file), opts)
   end
 
   def current_user

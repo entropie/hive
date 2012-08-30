@@ -20,7 +20,7 @@ class AuthController < QueenController
 
   def logout
     session.delete(:USER)
-    redirect "/"
+    redirect(request[:r] || "/")
   end
 end
 

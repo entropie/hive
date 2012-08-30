@@ -4,6 +4,10 @@
 
   - if logged_in?
     .row
-      %h1 hello #{current_user}
+      .span6
+        %h1 hello #{current_user}
   - else
-    %a{:href => AuthController.r(:login)} Login
+    .row
+      .span6
+        %p
+          %a{:href => AuthController.r(:login)} Login

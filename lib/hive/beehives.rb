@@ -115,14 +115,20 @@ module Hive
       config.js.map{ |js| "<script type='text/javascript' src='/js/#{ js }'></script>" }.join("\n")
     end
 
+    def view_path
+      File.join(path, "beehive", "view")
+    end
+
 
     def ramaze_opts
       roots = [ Queen::ROOT.join("queen"), File.join(path, "beehive") ]
 
-      opts = Queen.ramaze_opts.merge(:port => config.port, :root => roots)
+      opts = Queen.ramaze_opts.merge(:port => config.port,
+                                     :root => roots,
+                                     :host => "0.0.0.0") # FIXME:
 
       layout_dir = File.join(path, "beehive", "layout")
-      p layout_dir
+
       if File.exist?(layout_dir)
        opts[:layouts] = layout_dir
       end
@@ -151,9 +157,7 @@ module Hive
       # I had wierd problems during developing a very similiar app with
       # memchached and multiple apps running. Sometimes the session was
       # shared beetween different apps. This should fix it.
-      #
-      # FIXME:
-      # Ramaze.options.session.key = self.identifier
+      Ramaze.options.session.key = self.identifier.to_s
 
       debug "asking queen for global enviroment..."
 
@@ -171,10 +175,10 @@ module Hive
 
       require_enviroment!
 
-      # Ramaze::Cache.options do |cache|
-      #   cache.names = [:session, :user]
-      #   cache.default = Ramaze::Cache::MemCache
-      # end
+      Ramaze::Cache.options do |cache|
+        cache.names = [:session, :user]
+        cache.default = Ramaze::Cache::MemCache
+      end
 
       debug; debug;
       debug "starting #{identifier} in +++#{mode}+++"
