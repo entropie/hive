@@ -109,7 +109,7 @@ module Hive
       Dir.glob("#{path}/beehive/controller/*.rb").each(&blk)
     end
 
-    def stylesheet_for_app
+    def stylesheets_for_app
       config.css.map{ |ss|
         "<link rel='stylesheet' rel='#{ss.first}' type='text/css' href='/css/#{ ss.last }?#{static_url_apendix}' />"
       }.join("\n")
