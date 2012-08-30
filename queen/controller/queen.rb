@@ -33,6 +33,9 @@ class QueenController < Ramaze::Controller
     body.to_s
   end
 
+
+  private
+
   def stylesheets_for_app
     Queen::BEEHIVE.stylesheets_for_app
   end
