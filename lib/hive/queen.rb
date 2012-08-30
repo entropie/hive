@@ -31,7 +31,9 @@ module Hive
     end
 
     def self.controller(&blk)
-      Dir.glob("#{Source.join("queen/controller")}/*.rb").each(&blk)
+      files = Dir.glob("#{Source.join("queen/controller")}/*.rb").
+        sort_by{|f| File.basename(f) == "queen.rb" ? 1 : 0 }.reverse # make sure to load queen.rb first
+      files.each(&blk)
     end
 
     def self.ramaze_opts

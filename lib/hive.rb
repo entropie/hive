@@ -31,11 +31,14 @@ module Hive
     puts "#{str.empty? ? "  " : "->" } #{str}"
   end
 
+  def File.shorten(path, additional = "/beehives/")
+    path.gsub(Source.join(additional), '')
+  end
+
   QUEEN_LIBRARIES =
     [
      "lib/hive",
-     "queen/lib",
-     "queen/helpers"
+     "queen/lib"
     ]
 
   QUEEN_LIBRARIES.each do |base_lib|

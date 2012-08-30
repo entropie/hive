@@ -82,7 +82,7 @@ module Hive
     end
 
     def mode
-      :dev
+      :dev                      # FIXME: hardcoded
     end
 
     def validate
@@ -115,38 +115,75 @@ module Hive
       config.js.map{ |js| "<script type='text/javascript' src='/js/#{ js }'></script>" }.join("\n")
     end
 
+
+    def ramaze_opts
+      roots = [ Queen::ROOT.join("queen"), File.join(path, "beehive") ]
+
+      opts = Queen.ramaze_opts.merge(:port => config.port, :root => roots)
+
+      layout_dir = File.join(path, "beehive", "layout")
+      p layout_dir
+      if File.exist?(layout_dir)
+       opts[:layouts] = layout_dir
+      end
+
+      opts
+    end
+
+    def require_enviroment!
+      paths = [ Source.join("helpers"),
+                File.join(path, "helpers"),
+                File.join(path, "lib", identifier.to_s)
+              ]
+
+      paths.each do |source_dir|
+        debug " claiming honey from '#{File.shorten(source_dir, '')}'"
+        Dir.glob("#{source_dir}/**/*.rb").each do |file|
+          debug "   #{File.shorten(file)}"
+          require file
+        end
+      end
+    end
+
     def standalone!
       Queen.const_set("BEEHIVE", self)
 
-      Ramaze.options.session.key = self.identifier
+      # I had wierd problems during developing a very similiar app with
+      # memchached and multiple apps running. Sometimes the session was
+      # shared beetween different apps. This should fix it.
+      #
+      # FIXME:
+      # Ramaze.options.session.key = self.identifier
 
       debug "asking queen for global enviroment..."
 
       queen.controller do |queen_controller|
-        debug "   queen controller: loading '#{queen_controller}'"
+        debug " queen controller: loading '#{File.shorten(queen_controller, '')}'"
         require queen_controller
       end
 
       debug "calling beehive supervisors..."
 
       controller do |beehive_controller|
-        debug " beehive controller: loading '#{beehive_controller}' [#{identifier}]"
+        debug " beehive controller: loading '#{File.shorten(beehive_controller)}' [#{identifier}]"
         require beehive_controller
       end
 
-      debug
-      debug
+      require_enviroment!
 
-      roots = [Queen::ROOT.join("queen")]
-      roots.push(File.join(path, "beehive"))
+      # Ramaze::Cache.options do |cache|
+      #   cache.names = [:session, :user]
+      #   cache.default = Ramaze::Cache::MemCache
+      # end
 
+      debug; debug;
       debug "starting #{identifier} in +++#{mode}+++"
-      debug
-      debug
+      debug; debug
 
-      Ramaze.start(Queen.ramaze_opts.
-                   merge(:port => config.port,
-                         :root => roots))
+
+      opts = ramaze_opts
+      debug "ramaze opts\n #{PP.pp(opts, '')}"
+      Ramaze.start(opts)
     end
 
   end
