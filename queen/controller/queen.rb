@@ -25,6 +25,14 @@ class QueenController < Ramaze::Controller
 
   helper        :user
 
+  provide(:json, :type => 'application/json') do |action, body|
+    body.to_json
+  end
+
+  provide(:txt, :type => 'text/plain') do |action, body|
+    body.to_s
+  end
+
   def stylesheet_for_app
     Queen::BEEHIVE.stylesheet_for_app
   end
