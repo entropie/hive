@@ -1,1 +1,9 @@
-%h1 Hello from test w/ template
+.container
+
+  %h1 Hello from test w/ template
+
+  - if logged_in?
+    .row
+      %h1 hello #{current_user}
+  - else
+    %a{:href => AuthController.r(:login)} Login

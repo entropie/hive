@@ -11,7 +11,7 @@ class User
   }
 
   def self.authenticate(h)
-    USERS[h["username"]] == Digest::SHA1.hexdigest(h["password"]) and h
+    USERS[h["username"]] == h["password"] and h["username"]
   end
 end
 
@@ -30,6 +30,12 @@ class QueenController < Ramaze::Controller
 
   def javascript_for_app
     Queen::BEEHIVE.javascripts_for_app
+  end
+
+  def current_user
+    session[:USER][:credentials]["username"] # FIXME: stub
+  rescue
+    nil
   end
 
 end

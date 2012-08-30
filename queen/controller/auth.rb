@@ -12,11 +12,15 @@ class AuthController < QueenController
 
   def login
     if request.post?
+      request[:password] = Digest::SHA1.hexdigest(request[:password])
       user_login(request.subset(:username, :password))
     end
+  rescue
   end
 
   def logout
+    session.delete(:USER)
+    redirect "/"
   end
 end
 
