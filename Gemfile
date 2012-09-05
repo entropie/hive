@@ -11,5 +11,5 @@ gem "faker"
 gem "RedCloth"
 
 gem "bacon"
-
+gem "dalli"
 gem "term-ansicolor", :require => "term/ansicolor"

@@ -52,11 +52,8 @@ module Hive
     $: << lib_dir unless $:.include?(lib_dir)
   end
 
-  p :q
   require "queen"
-  p :bees
   require "beehives"
-  p :ba
   require "assets"
 end
 
