@@ -6,33 +6,6 @@
 require "lib/hive.rb"
 include Hive
 
-task :test_assets do
-  hive = (ENV["HIVE"] or "test").to_sym
-
-  Queen::hives.load(hive)
-  hive = Queen::hives[hive]
-
-  hive.assets.read
-
-  #p hive.assets.beehive_specific
-
-  pp hive.assets.config.port
-end
-
-
-task :start do
-  hive = (ENV["HIVE"] or "test").to_sym
-
-  Queen::hives.load(hive)
-  hive = Queen::hives[hive]
-  hive.assets.read
-  
-  #p 1
-  #p hive.config.port
-  #p hive.stylesheet_for_app
-  hive.standalone!
-end
-
 namespace :beehives do
 
   Hives = Queen::hives.load
