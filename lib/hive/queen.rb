@@ -20,7 +20,7 @@ module Hive
     end
 
     def self.hives
-      ::Beehives
+      Beehives
     end
 
     def self.assets

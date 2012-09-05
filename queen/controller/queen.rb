@@ -17,6 +17,8 @@ end
 
 class QueenController < Ramaze::Controller
 
+  include       Hive
+
   include       Queen
   extend        Queen
 

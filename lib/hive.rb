@@ -12,6 +12,11 @@ require "logger"
 require "pp"
 require "ostruct"
 
+def debug(str = "")
+  puts "#{str.empty? ? "  " : "->" } #{str}"
+end
+
+
 module Hive
   Version = [0, 0, 1]
 
@@ -47,10 +52,12 @@ module Hive
     $: << lib_dir unless $:.include?(lib_dir)
   end
 
+  p :q
   require "queen"
+  p :bees
   require "beehives"
+  p :ba
   require "assets"
-
 end
 
 =begin

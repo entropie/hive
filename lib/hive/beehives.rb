@@ -82,9 +82,16 @@ module Hive
       create_beehive_directories!
       create_beehive_app_files!
       create_start_rb!
+      create_config_ru!
       create_default_config!
 
       validate
+    end
+
+    def create_config_ru!
+      cp(File.join(Queen::ROOT, "config", "config.ru.default"),
+         File.join(path, 'config.ru'),
+         :verbose => true)
     end
 
     def create_start_rb!
@@ -186,9 +193,9 @@ module Hive
 
       layout_dir = File.join(path, "beehive", "layout")
 
-      if File.exist?(layout_dir)
-       opts[:layouts] = layout_dir
-      end
+      # if File.exist?(layout_dir)
+      #  opts[:layouts] = layout_dir
+      # end
 
       opts
     end
@@ -208,7 +215,7 @@ module Hive
       end
     end
 
-    def standalone!
+    def set_enviroment(options = { })
       Queen.const_set("BEEHIVE", self)
 
       # I had wierd problems during developing a very similiar app with
@@ -236,11 +243,25 @@ module Hive
         cache.names = [:session, :user]
         cache.default = Ramaze::Cache::MemCache
       end
+    end
+
+    def start!(opts)
+      set_enviroment(opts)
 
       debug; debug;
       debug white { "starting #{identifier} in +++#{mode}+++"}
       debug; debug
 
+      ropts = ramaze_opts.merge(opts)
+      Ramaze.start(ropts)
+    end
+
+    def standalone!
+      set_enviroment
+
+      debug; debug;
+      debug white { "starting #{identifier} in +++#{mode}+++"}
+      debug; debug
 
       opts = ramaze_opts
       debug "ramaze opts\n #{PP.pp(opts, '')}"
