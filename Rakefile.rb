@@ -33,6 +33,42 @@ task :start do
   hive.standalone!
 end
 
+namespace :beehives do
+
+  Hives = Queen::hives.load
+  include Queen
+  include Term::ANSIColor
+
+  desc "give live to a new hive"
+  task :create do
+    identifier = ENV['IDENTIFIER']
+    raise "no identifier given; use IDENTIFIER=foo rake beehives:create" unless identifier
+
+    beehive = Hive::Beehive.create(identifier)
+    if beehive.create!
+      puts green { "done and valid!" }
+      puts red { "make sure to edit #{File.join(beehive.path, 'config', 'beehive.rb')}" }
+    end
+  end
+
+  desc "list of all beehives aka. apps"
+  task :ls do
+    Hives.each do |ident, hive|
+      p hive
+    end
+  end
+
+
+  Hives.each do |ident, hive|
+    namespace ident do
+      desc "overview about file hirarchy"
+      task :ls do
+        p 1
+      end
+    end
+  end
+end
+
 =begin
 Local Variables:
   mode:ruby

@@ -24,6 +24,10 @@ module Hive
       all[obj.to_sym]
     end
 
+    def self.each(&blk)
+      all.each(&blk)
+    end
+
     def self.load(hive = nil)
       beehives = Dir.glob("#{Queen::ROOT}/#{BEEHIVE_DIR}/*")
 
@@ -42,6 +46,7 @@ module Hive
         if not hive or (hive and File.basename(hv) == hive.to_s)
           m[symb] = Beehive.new(hv)
         end
+        m
       }
 
       to_load
@@ -69,9 +74,57 @@ module Hive
     end
   end
 
+  module BeehiveCreator
+    include BeehiveValidator
+    include FileUtils
+
+    def create!
+      create_beehive_directories!
+      create_beehive_app_files!
+      create_start_rb!
+      create_default_config!
+
+      validate
+    end
+
+    def create_start_rb!
+      cp(File.join(Queen::ROOT, "config", "start.rb.default"),
+         File.join(path, 'beehive', 'start.rb'),
+         :verbose => true)
+    end
+
+    def create_default_config!
+      cp(File.join(Queen::ROOT, "config", "beehive.rb.default"),
+         File.join(path, 'config', 'beehive.rb'),
+         :verbose => true)
+    end
+
+    def create_beehive_directories!
+      BEEHIVE_DIRECTORIES.each do |dir|
+        mkdir_p(File.join(path, dir), :verbose => true)
+      end
+    end
+
+    def create_beehive_app_files!
+      BEEHIVE_APP_FILES.reject{ |af| af.include?(".")}.each do |dir|
+        mkdir_p(File.join(path, "beehive", dir), :verbose => true)
+      end
+    end
+  end
+
   class Beehive
 
+    include Term::ANSIColor
+
     attr_reader :path
+
+    def self.create(path)
+      beehive = new("#{Queen::ROOT}/#{Beehives::BEEHIVE_DIR}/#{path}").extend(BeehiveCreator)
+    end
+
+    def inspect
+      "%s -> %s" % [red{ identifier.to_s }, path]
+    end
 
     def initialize(path)
       @path = path
@@ -129,7 +182,7 @@ module Hive
 
       opts = Queen.ramaze_opts.merge(:port => config.port,
                                      :root => roots,
-                                     :host => "0.0.0.0") # FIXME:
+                                     :host => config.host)
 
       layout_dir = File.join(path, "beehive", "layout")
 
@@ -185,7 +238,7 @@ module Hive
       end
 
       debug; debug;
-      debug "starting #{identifier} in +++#{mode}+++"
+      debug white { "starting #{identifier} in +++#{mode}+++"}
       debug; debug
 
 
