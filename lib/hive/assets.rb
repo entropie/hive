@@ -12,6 +12,7 @@ module Hive
       attr_accessor :css
       attr_accessor :sass
       attr_accessor :js
+      attr_accessor :host
 
       attr_reader   :beehive
 
@@ -19,9 +20,6 @@ module Hive
         @beehive = beehive
       end
 
-      def method_missing(m, *args)
-        self.send("#{m}=", *args)
-      end
     end
 
     attr_reader :beehive, :config
