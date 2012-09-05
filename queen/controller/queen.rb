@@ -34,6 +34,15 @@ class QueenController < Ramaze::Controller
   end
 
 
+  def self.action_missing(path)
+    return nil if path == '/E404'
+    try_resolve('/E404')
+  end
+
+  def E404
+    "404"
+  end
+
   private
 
   def stylesheets_for_app
