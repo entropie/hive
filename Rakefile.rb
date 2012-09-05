@@ -58,13 +58,14 @@ namespace :beehives do
     end
   end
 
-
   Hives.each do |ident, hive|
     namespace ident do
-      desc "overview about file hirarchy"
-      task :ls do
-        p 1
+      desc "starts beehive in standalone mode"
+      task :start do
+        hive.assets.read
+        hive.standalone!
       end
+
     end
   end
 end
