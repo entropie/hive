@@ -1,3 +1,5 @@
+require "bundler/capistrano"
+
 set :application, "hive"
 set :repository,  "git://github.com/entropie/hive.git"
 
