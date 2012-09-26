@@ -30,10 +30,6 @@ class PluginMediaController < QueenController
     end
   end
 
-  def index
-    "asdfgh"
-  end
-
 
   # FIXME:
   def img(*fragments)
@@ -42,6 +38,7 @@ class PluginMediaController < QueenController
 
     File.open(file, 'rb').read
   end
+
 
   def self.safe_file(name, tempfile, target_path, rename = true)
     fp = File.open(tempfile.path, 'rb').read
