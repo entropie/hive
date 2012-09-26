@@ -47,6 +47,10 @@ class QueenController < Ramaze::Controller
 
   private
 
+  def beehive
+    @app ||= Queen::BEEHIVE
+  end
+
   def stylesheets_for_app
     Queen::BEEHIVE.stylesheets_for_app
   end

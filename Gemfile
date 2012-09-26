@@ -19,3 +19,5 @@ gem "term-ansicolor", :require => "term/ansicolor"
 gem "capistrano"
 
 gem "subcommand"
+
+gem "rmagick", :require => "RMagick"

@@ -1,0 +1,12 @@
+#upload
+  %form.form-horizontal{:action => PluginMediaController.r(:upload), :method => :post, :enctype => "multipart/form-data"}
+    %legend Bild Hochladen
+
+    .control-group
+      .control-label{:for => :inputFile} Bild
+      .controls
+        %input{:type => :file, :id => :inputFile, :name => :file}
+
+    .control-group
+      .controls
+        %input.btn.primary{:type => :submit, :value => "Hochladen"}    

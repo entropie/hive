@@ -54,7 +54,7 @@ module Hive
   end
 
   module BeehiveValidator
-    BEEHIVE_DIRECTORIES = %w'beehive config lib public spec tmp'
+    BEEHIVE_DIRECTORIES = %w'beehive config lib public spec tmp plugin'
 
     BEEHIVE_APP_FILES   = %w'controller helper layout public view start.rb'
 
@@ -203,7 +203,11 @@ module Hive
     end
 
     def view_path
-      File.join(path, "beehive", "view")
+      @view_path ||= File.join(path, "beehive", "view")
+    end
+
+    def media_path(*args)
+      @media_path ||= File.join(path, "media", *args)
     end
 
 
@@ -251,21 +255,18 @@ module Hive
       Ramaze::Cache.options.session = Ramaze::Cache::MemCache
 
       debug "asking queen for global enviroment..."
-
       queen.controller do |queen_controller|
         debug " queen controller: loading '#{File.shorten(queen_controller, '')}'"
         require queen_controller
       end
 
       debug "gathering plugins upgrade to make the bees rock"
-
       queen.plugins do |plugin_controller|
         debug " queen plugin controller: loading '#{File.shorten(plugin_controller, '')}'"
         require plugin_controller
       end
 
       debug "calling beehive supervisors..."
-
       controller do |beehive_controller|
         debug " beehive controller: loading '#{File.shorten(beehive_controller)}' [#{identifier}]"
         require beehive_controller
