@@ -3,9 +3,9 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-class AuthController < QueenController
+class PluginAuthController < QueenController
 
-  map "/auth"
+  map "/p/auth"
 
   before(:login){ redirect '/' if logged_in? }
   after (:login){ redirect request[:r] if logged_in? }

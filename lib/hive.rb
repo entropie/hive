@@ -17,7 +17,6 @@ def debug(str = "")
   puts "#{str.empty? ? "  " : "->" } #{str}" if $DEBUG
 end
 
-
 module Hive
   Version = [0, 0, 3]
 

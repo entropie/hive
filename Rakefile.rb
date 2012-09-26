@@ -12,6 +12,8 @@ namespace :beehives do
   include Queen
   include Term::ANSIColor
 
+  $DEBUG = true if ENV["DEBUG"] == "true"
+
   desc "give live to a new hive"
   task :create do
     identifier = ENV['IDENTIFIER']

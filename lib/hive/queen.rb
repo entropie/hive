@@ -36,6 +36,10 @@ module Hive
       files.each(&blk)
     end
 
+    def self.plugins(&blk)
+      files = Dir.glob("#{Source.join("queen/plugins")}/*.rb").each(&blk)
+    end
+
     def self.ramaze_opts
       { :adapter => :mongrel }
     end

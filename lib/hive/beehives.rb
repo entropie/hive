@@ -224,18 +224,21 @@ module Hive
     end
 
     def require_enviroment!
-      paths = [ Source.join("helpers"),
-                File.join(path, "helpers"),
+      paths = [ Source.join("queen", "helper"),
+                File.join(path, "helper"),
                 File.join(path, "lib", identifier.to_s)
               ]
 
       paths.each do |source_dir|
         debug " claiming honey from '#{File.shorten(source_dir, '')}'"
         Dir.glob("#{source_dir}/**/*.rb").each do |file|
-          debug "   #{File.shorten(file)}"
+          debug "   #{File.shorten(file, "")}"
           require file
         end
       end
+    end
+
+    def require_plugins!
     end
 
     def set_enviroment(options = { })
@@ -254,6 +257,13 @@ module Hive
         require queen_controller
       end
 
+      debug "gathering plugins upgrade to make the bees rock"
+
+      queen.plugins do |plugin_controller|
+        debug " queen plugin controller: loading '#{File.shorten(plugin_controller, '')}'"
+        require plugin_controller
+      end
+
       debug "calling beehive supervisors..."
 
       controller do |beehive_controller|
@@ -262,11 +272,7 @@ module Hive
       end
 
       require_enviroment!
-
-      # Ramaze::Cache.options do |cache|
-      #   #cache.names = [:session, :user]
-      #   cache.default = Ramaze::Cache::MemCache
-      # end
+      require_plugins!
     end
 
     def start!(opts)

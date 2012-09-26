@@ -1,0 +1,19 @@
+#plugin-login
+  %form#plugin-login-form.form-horizontal{:method => :post, :action => PluginAuthController.r(:login)}
+    %legend Authentifizierung
+    %input{:type => :hidden, :name => :r, :value => "/test"}
+    %fieldset
+      .control-group
+        %label.control-label{:for => :username} Username
+        .controls
+          %input{:id => :username, :name => :username, :type => :text, :placeholder => "Username"}
+      .control-group
+        %label.control-label{:for => :password} Password
+        .controls
+          %input{:id => :password, :name => :password, :type => :password, :placeholder => "Password"}
+      .control-group
+        .controls
+          .actions
+            %input{:type => :submit, :class => "btn primary", :value =>  "Authenticate"}
+
+

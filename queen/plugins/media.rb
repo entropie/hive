@@ -3,23 +3,14 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-class TestController < QueenController
+class PluginMediaController < QueenController
+  map "/p/media"
 
-  map "/test"
+  layout :nil
 
   def index
+    "asdfgh"
   end
-
-  def lala
-  end
-
-  def image_upload
-  end
-
-  def _ajax
-    Faker::Lorem.paragraph
-  end
-
 end
 
 

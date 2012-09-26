@@ -6,11 +6,13 @@
         %li
           %a{:href => TestController.r(:bootstrap)} Bootstrap
         %li
+          %a{:href => TestController.r(:image_upload)} Upload
+        %li
           %a{:href => TestController.r(:lala)} Foobar
 
       %ul.nav.pull-right
         %li
           - if logged_in?
-            %a{:href => AuthController.r(:logout, :r => TestController.r(:index))} Logout
+            %a{:href => PluginAuthController.r(:logout, :r => TestController.r(:index))} Logout
           - else
-            %a{:href => AuthController.r(:login)} Login
+            %a{:href => PluginAuthController.r(:login)} Login
