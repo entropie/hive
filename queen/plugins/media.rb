@@ -8,9 +8,8 @@ class PluginMediaController < QueenController
 
   layout :nil
 
-  helper :send_file
   engine :none
-  
+
   provide(:json, :type => 'application/json') do |action, body|
     action.layout = nil
     body.to_json
@@ -39,15 +38,8 @@ class PluginMediaController < QueenController
   # FIXME:
   def img(*fragments)
     file = File.join(beehive.media_path("images"), *fragments)
+    response['Content-Type'] = Rack::Mime.mime_type(File.extname(file))
 
-    en = File.extname(file)[1..-1].downcase
-    mt = case en
-         when "jpg", "jpeg": "image/jpg"
-         else
-           "image/#{en}"
-         end
-    response['Content-Type'] = mt
-    #send_file(file)
     File.open(file, 'rb').read
   end
 
