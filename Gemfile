@@ -7,7 +7,8 @@ gem "haml"
 gem "sass"
 gem "pg"
 
-gem 'rack', '= 1.3.5'
+
+gem 'ramaze'
 gem "mongrel"
 gem "faker"
 gem "RedCloth"

@@ -30,16 +30,6 @@ module Hive
     File.join(Source, *fragments)
   end
 
-  $: << File.join(Source, "../innate/lib")
-  $: << File.join(Source, "../ramaze/lib")
-
-  # FIXME:
-  $: << "/srv/innate/lib"
-  $: << "/srv/ramaze/lib"
-
-  require "innate"
-  require "ramaze"
-
   def File.shorten(path, additional = "/beehives/")
     path.gsub(Source.join(additional), '')
   end
