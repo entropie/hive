@@ -19,7 +19,7 @@ end
 
 
 module Hive
-  Version = [0, 0, 1]
+  Version = [0, 0, 3]
 
   def Version.to_s
     "Hive %s" % Version.join(".")
