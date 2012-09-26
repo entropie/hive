@@ -33,6 +33,11 @@ module Hive
 
   $: << File.join(Source, "../innate/lib")
   $: << File.join(Source, "../ramaze/lib")
+
+  # FIXME:
+  $: << "/srv/innate/lib"
+  $: << "/srv/ramaze/lib"
+
   require "innate"
   require "ramaze"
 
