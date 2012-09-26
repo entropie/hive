@@ -223,7 +223,6 @@ module Hive
       # shared beetween different apps. This should fix it.
       Ramaze.options.session.key = self.identifier.to_s
       Ramaze::Cache.options.session = Ramaze::Cache::MemCache
-      p 23
 
       debug "asking queen for global enviroment..."
 

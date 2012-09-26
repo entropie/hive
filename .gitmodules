@@ -1,0 +1,3 @@
+[submodule "beehives/mike"]
+	path = beehives/mike
+	url = ssh://mit@dogitright.de/home/mit/Source/beehives/mike/
