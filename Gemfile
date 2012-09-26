@@ -16,4 +16,6 @@ gem "bacon"
 gem "dalli"
 gem "term-ansicolor", :require => "term/ansicolor"
 
+gem "capistrano"
+
 gem "subcommand"
