@@ -1,3 +1,5 @@
+# -*- mode:ruby -*-
+
 source :rubygems
 
 gem "json"
@@ -13,3 +15,5 @@ gem "RedCloth"
 gem "bacon"
 gem "dalli"
 gem "term-ansicolor", :require => "term/ansicolor"
+
+gem "subcommand"

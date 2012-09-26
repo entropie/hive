@@ -78,6 +78,10 @@ module Hive
     include BeehiveValidator
     include FileUtils
 
+    def root
+      @root ||= Queen::ROOT
+    end
+
     def create!
       create_beehive_directories!
       create_beehive_app_files!
@@ -89,19 +93,19 @@ module Hive
     end
 
     def create_config_ru!
-      cp(File.join(Queen::ROOT, "config", "config.ru.default"),
+      cp(File.join(root, "config", "config.ru.default"),
          File.join(path, 'config.ru'),
          :verbose => true)
     end
 
     def create_start_rb!
-      cp(File.join(Queen::ROOT, "config", "start.rb.default"),
+      cp(File.join(root, "config", "start.rb.default"),
          File.join(path, 'beehive', 'start.rb'),
          :verbose => true)
     end
 
     def create_default_config!
-      cp(File.join(Queen::ROOT, "config", "beehive.rb.default"),
+      cp(File.join(root, "config", "beehive.rb.default"),
          File.join(path, 'config', 'beehive.rb'),
          :verbose => true)
     end
@@ -116,6 +120,21 @@ module Hive
       BEEHIVE_APP_FILES.reject{ |af| af.include?(".")}.each do |dir|
         mkdir_p(File.join(path, "beehive", dir), :verbose => true)
       end
+    end
+  end
+
+  module BeehiveCMDInterface
+    def list(&blk)
+      res = []
+      Find.find(path) do |file|
+        if File.basename(file) == ".git"
+          res << file
+          Find.prune
+        end
+        res << file
+      end
+
+      res = res.sort.map{ |f| File.shorten(f)}
     end
   end
 
@@ -147,6 +166,10 @@ module Hive
 
     def validate
       extend(BeehiveValidator).validate
+    end
+
+    def list
+      extend(BeehiveCMDInterface).list
     end
 
     def assets

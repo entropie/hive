@@ -9,16 +9,21 @@ require "bundler"
 Bundler.require
 
 require "logger"
+require "find"
 require "pp"
 require "ostruct"
 
 def debug(str = "")
-  puts "#{str.empty? ? "  " : "->" } #{str}"
+  puts "#{str.empty? ? "  " : "->" } #{str}" if $DEBUG
 end
 
 
 module Hive
   Version = [0, 0, 1]
+
+  def Version.to_s
+    "Hive %s" % Version.join(".")
+  end
 
   Source = File.dirname(File.dirname(File.expand_path(__FILE__)))
 
@@ -30,11 +35,6 @@ module Hive
   $: << File.join(Source, "../ramaze/lib")
   require "innate"
   require "ramaze"
-
-
-  def debug(str = "")
-    puts "#{str.empty? ? "  " : "->" } #{str}"
-  end
 
   def File.shorten(path, additional = "/beehives/")
     path.gsub(Source.join(additional), '')
@@ -48,7 +48,7 @@ module Hive
 
   QUEEN_LIBRARIES.each do |base_lib|
     lib_dir = Source.join(base_lib)
-    puts "$: << #{lib_dir}"
+    #puts "$: << #{lib_dir}"
     $: << lib_dir unless $:.include?(lib_dir)
   end
 
