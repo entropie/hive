@@ -30,7 +30,7 @@ module Hive
 
         include ReadDir
 
-        attr_accessor :policy, :bads
+        attr_accessor :policy, :bads, :target
 
         ResizePolicies = {
           :thumbnail => proc{
@@ -41,12 +41,16 @@ module Hive
           },
           :sidebar => proc{
             resize_to_fill!(162, 242)
+          },
+          :big => proc{
+            resize_to_fit!(1042)
           }
         }
 
         def initialize(opts = {}, &blk)
           @bads = []
           @custom_policies = opts[:policies]
+          @target = opts[:path]
           instance_eval(&blk)
         end
 
@@ -58,8 +62,8 @@ module Hive
           spool.each do |img|
             policies.each do |policy|
               begin
-                puts ">>> Resize(#{policy}): #{img}"
-                new_img = Image.new(img)
+                puts ">>> Resize(#{policy}): #{img} -> #{target}/#{policy}"
+                new_img = Image.new(img, target)
                 new_img.facility = self
                 new_img.resize(policy)
               rescue Magick::ImageMagickError
@@ -92,7 +96,7 @@ module Hive
       end
 
       class Image
-        attr_accessor :resize_policy, :path, :image, :_image, :facility
+        attr_accessor :resize_policy, :path, :image, :_image, :facility, :target
 
         def width
           image.columns
@@ -106,19 +110,22 @@ module Hive
           image.send(m, *a, &blk)
         end
 
-        def initialize(path)
+        def initialize(path, target = nil)
           self.path = File.new(path)
           self.image = Magick::Image.read(path).first
+          self.target = target
           raise Magick::ImageMagickError, "image is nil" unless image
         end
 
         def filename_for(pol)
           name = File.basename(path.path)
-          File.dirname(path.path) << "/../#{pol}/#{name}"
+          dir = File.dirname(path.path) << "/../#{pol}/#{name}"
+          FileUtils.mkdir_p(File.dirname(dir))
+          dir
         end
 
         def write
-          image.write filename_for(@policy)
+          image.write(filename_for(@policy))
         end
 
         def resize(policy = :default)

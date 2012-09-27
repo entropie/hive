@@ -29,15 +29,23 @@ class PluginMediaController < QueenController
     end
   end
 
-
   # FIXME:
   def img(*fragments)
-    pp fragments
     file = File.join(beehive.media_path("images"), *fragments)
     response.header['Content-Type'] = Rack::Mime.mime_type(File.extname(file))
     response.body = File.open(file, 'rb').read
   end
 
+  def resize(*fragments)
+    file = File.join(beehive.media_path("images"), *fragments)
+
+
+    Helper::ImageResize::ImageResizeFacility.new(:path => File.dirname(File.dirname(file))) {
+      resize(file)
+    }.start(:thumbnail, :medium, :sidebar, :big)
+
+    redirect request[:redirect]
+  end
 
   def self.safe_file(name, tempfile, target_path, rename = true)
     fp = File.open(tempfile.path, 'rb').read

@@ -35,6 +35,18 @@ class QueenController < Ramaze::Controller
     body.to_s
   end
 
+  def img_src(path)
+    path = path.split("/") if path.kind_of?(String)
+    file = File.join(*path)
+    "#{PluginMediaController.r(:img)}#{file}"
+  end
+
+  def img_tag(path, opts = { })
+    path = path.split("/") if path.kind_of?(String)
+    file = File.join(*path)
+    "<img src='#{PluginMediaController.r(:img)}/#{file}' />"
+  end
+
   def rpath
     request.env["REQUEST_URI"]
   end
@@ -43,7 +55,7 @@ class QueenController < Ramaze::Controller
     begin
       if rpath == url or rpath.split("/")[0..2].join("/") == url
         active_link = "active"
-      # elsif QueenController.controller_at( nurl = "/#{rpath.split("/")[1]}" ) == AdminController
+      # elsif (nurl = "/#{rpath.split("/")[1]}") == "/a"
       #   active_link = "active" if url == nurl
       elsif rpath =~ /^\/blog/ and url == "/blog"
         active_link = "active"
