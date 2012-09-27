@@ -35,6 +35,25 @@ class QueenController < Ramaze::Controller
     body.to_s
   end
 
+  def rpath
+    request.env["REQUEST_URI"]
+  end
+
+  def active_link(url, text)
+    begin
+      if rpath == url or rpath.split("/")[0..2].join("/") == url
+        active_link = "active"
+      # elsif QueenController.controller_at( nurl = "/#{rpath.split("/")[1]}" ) == AdminController
+      #   active_link = "active" if url == nurl
+      elsif rpath =~ /^\/blog/ and url == "/blog"
+        active_link = "active"
+      end
+    rescue
+      active_link = ""
+    end
+
+    "<a href='#{url}' class='#{active_link.nil? ? "" : "active"}'>#{text}</a>"
+  end
 
   def self.action_missing(path)
     return nil if path == '/E404'

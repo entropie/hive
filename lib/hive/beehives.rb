@@ -70,7 +70,7 @@ module Hive
 
     def validate_beehive_app_files
       (Dir["#{path}/beehive/*"].map{ |dir| File.basename(dir) } &
-        BEEHIVE_APP_FILES).size == BEEHIVE_APP_FILES.size
+       BEEHIVE_APP_FILES).size == BEEHIVE_APP_FILES.size
     end
   end
 
@@ -194,7 +194,8 @@ module Hive
 
     def stylesheets_for_app
       config.css.map{ |ss|
-        "<link rel='stylesheet' rel='#{ss.first}' type='text/css' href='/css/#{ ss.last }?#{static_url_apendix}' />"
+        csspath = if ss.last[0..0] == "/" then ss.last else "/css/#{ ss.last }" end
+        "<link rel='stylesheet' rel='#{ss.first}' type='text/css' href='#{ csspath }?#{static_url_apendix}' />"
       }.join("\n")
     end
 
@@ -206,8 +207,12 @@ module Hive
       @view_path ||= File.join(path, "beehive", "view")
     end
 
+    def app_root(*args)
+      File.join(path, 'beehive', *args)
+    end
+
     def media_path(*args)
-      @media_path ||= File.join(path, "media", *args)
+      File.join(path, "media", *args)
     end
 
 
@@ -254,6 +259,9 @@ module Hive
       Ramaze.options.session.key = self.identifier.to_s
       Ramaze::Cache.options.session = Ramaze::Cache::MemCache
 
+      require_enviroment!
+      require_plugins!
+
       debug "asking queen for global enviroment..."
       queen.controller do |queen_controller|
         debug " queen controller: loading '#{File.shorten(queen_controller, '')}'"
@@ -272,8 +280,6 @@ module Hive
         require beehive_controller
       end
 
-      require_enviroment!
-      require_plugins!
     end
 
     def start!(opts)
