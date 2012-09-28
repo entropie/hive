@@ -43,7 +43,11 @@ module Hive
             resize_to_fill!(162, 242)
           },
           :big => proc{
-            resize_to_fit!(1042)
+            if columns >= 1024 or rows >= 768
+              change_geometry('1024x768') { |cols, rows, img|
+                img.resize!(cols, rows)
+              }
+            end
           }
         }
 
