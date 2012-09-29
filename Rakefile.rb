@@ -45,6 +45,27 @@ namespace :beehives do
   end
 end
 
+
+task :delete_image do
+  hive = Hives[:dir]
+  hive.require_enviroment!
+  hive.set_enviroment
+  cat = ENV["CAT"]
+  imghash = ENV["IMG"]
+  abort "no categorie given (CAT)" unless cat
+  abort "no imghash given (IMG)" unless imghash
+
+  path = hive.media_path("images", "categories", cat)
+
+
+  Find.find(path) do |file|
+    file_hash = File.basename(file).split(".").first
+    next if file_hash != imghash
+    FileUtils.rm(file, :verbose => true)
+  end
+
+end
+
 task :import_images do
   Hives[:dir].require_enviroment!
   Hives[:dir].set_enviroment
