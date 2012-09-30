@@ -30,13 +30,13 @@ class PluginMediaController < QueenController
   end
 
   # FIXME:
-  def img(*fragments)
-    file = File.join(beehive.media_path("images"), *fragments)
-    response.header['Content-Type'] = Rack::Mime.mime_type(File.extname(file))
-    response.body = File.open(file){|f| f.read }
-  rescue
-    response.status = 404
-  end
+  # def img(*fragments)
+  #   file = File.join(beehive.media_path("images"), *fragments)
+  #   response.header['Content-Type'] = Rack::Mime.mime_type(File.extname(file))
+  #   response.body = File.open(file){|f| f.read }
+  # rescue
+  #   response.status = 404
+  # end
 
   def resize(*fragments)
     file = File.join(beehive.media_path("images"), *fragments)
@@ -49,6 +49,7 @@ class PluginMediaController < QueenController
     redirect request[:redirect]
   end
 
+  # FIXME:
   def self.safe_file(name, tempfile, target_path, rename = true)
     fp = File.open(tempfile.path, 'rb').read
 
