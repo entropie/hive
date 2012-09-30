@@ -14,7 +14,7 @@ require "pp"
 require "ostruct"
 
 def debug(str = "")
-  puts "#{str.empty? ? "  " : "->" } #{str}" if $DEBUG
+  puts "#{str.empty? ? "  " : "->" } #{str}" #if $DEBUG
 end
 
 module Hive
@@ -50,6 +50,8 @@ module Hive
   require "beehives"
   require "assets"
 end
+
+include Hive
 
 =begin
 Local Variables:

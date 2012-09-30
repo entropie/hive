@@ -3,4 +3,4 @@
 	url = ssh://mit@dogitright.de/home/mit/Source/beehives/mike/
 [submodule "beehives/dir"]
 	path = beehives/dir
-	url = ssh://mit@pullies/home/mit/Source/beehives/dir/
+	url = ssh://mit@dogitright.de/home/mit/Source/beehives/dir/
