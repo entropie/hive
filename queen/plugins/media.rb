@@ -33,7 +33,7 @@ class PluginMediaController < QueenController
   def img(*fragments)
     file = File.join(beehive.media_path("images"), *fragments)
     response.header['Content-Type'] = Rack::Mime.mime_type(File.extname(file))
-    response.body = File.open(file, 'rb').read
+    response.body = File.open(file){|f| f.read }
   rescue
     response.status = 404
   end
