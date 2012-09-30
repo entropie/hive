@@ -9,7 +9,7 @@ gem "pg"
 
 
 gem 'ramaze'
-gem "mongrel"
+gem "thin"
 gem "faker"
 gem "RedCloth"
 
