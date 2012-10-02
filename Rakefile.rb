@@ -70,6 +70,13 @@ task :import_images do
   Hives[:dir].require_enviroment!
   Hives[:dir].set_enviroment
 
+end
+
+
+task :import_images do
+  Hives[:dir].require_enviroment!
+  Hives[:dir].set_enviroment
+
   targets = %w(direct sidebar utils)
 
   targets.each do |target|
