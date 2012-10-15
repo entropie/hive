@@ -7,7 +7,8 @@
 # FIXME: stub for now
 class User
   USERS = {
-    'entropie'    =>  Digest::SHA1.hexdigest('test')
+    'entropie'    =>  Digest::SHA1.hexdigest('test'),
+    "mike"        =>  Digest::SHA1.hexdigest('test'),
   }
 
   def self.authenticate(h)
@@ -33,18 +34,6 @@ class QueenController < Ramaze::Controller
 
   provide(:txt, :type => 'text/plain') do |action, body|
     body.to_s
-  end
-
-  def img_src(path)
-    path = path.split("/") if path.kind_of?(String)
-    file = File.join(*path)
-    "#{PluginMediaController.r(:img)}#{file}"
-  end
-
-  def img_tag(path, opts = { })
-    path = path.split("/") if path.kind_of?(String)
-    file = File.join(*path)
-    "<img src='#{PluginMediaController.r(:img)}/#{file}' />"
   end
 
   def rpath

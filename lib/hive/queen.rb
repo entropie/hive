@@ -41,7 +41,7 @@ module Hive
     end
 
     def self.ramaze_opts
-      { :adapter => :thin }
+      { :adapter => :mongrel }
     end
   end
 end
