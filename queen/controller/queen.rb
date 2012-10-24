@@ -84,7 +84,7 @@ class QueenController < Ramaze::Controller
   end
 
   def plugin_render_file(plugin, file, opts = { })
-    render_file(File.join("queen", "view", "p", file), opts)
+    render_file(Source.join("queen", "view", "p", file), opts)
   end
 
   def current_user
