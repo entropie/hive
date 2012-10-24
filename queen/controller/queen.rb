@@ -83,6 +83,10 @@ class QueenController < Ramaze::Controller
     render_file(File.join(BEEHIVE.view_path, file), opts)
   end
 
+  def plugin_render_file(plugin, file, opts = { })
+    render_file(File.join("queen", "view", "p", file), opts)
+  end
+
   def current_user
     session[:USER][:credentials]["username"] # FIXME: stub
   rescue

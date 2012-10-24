@@ -1,0 +1,9 @@
+.entry{:id => @entry.eid}
+  .head
+    .name= @entry.name
+    .between schrieb am
+    .date= @entry.date
+
+  .body
+    %p.text= @entry.text
+
