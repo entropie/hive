@@ -95,6 +95,27 @@ task :import_images do
 
 end
 
+task :fix_calendar_paths do
+  Hives[:dir].require_enviroment!
+  Hives[:dir].set_enviroment
+
+  mp = Hives[:dir].media_path("events")
+
+  Find.find(mp) do |file|
+    if File.extname(file) == ".yaml"
+      newfile_ary = File.readlines(file).dup
+
+      newfile_ary.map!{ |nf|
+        nf = nf.gsub(/beehives\/dir\//, "")
+        nf
+      }
+      p File.open(file, "w+"){ |fp| fp.write(newfile_ary.join)}
+    end
+  end
+  
+end
+
+
 =begin
 Local Variables:
   mode:ruby
