@@ -23,3 +23,5 @@ gem "capistrano"
 gem "subcommand"
 
 gem "rmagick", :require => "RMagick"
+
+gem "tlsmail"
