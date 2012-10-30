@@ -4,3 +4,6 @@
 [submodule "beehives/dir"]
 	path = beehives/dir
 	url = ssh://mit@dogitright.de/home/mit/Source/beehives/dir/
+[submodule "beehives/my"]
+	path = beehives/my
+	url = ssh://mit@pullies/home/mit/Source/beehives/my/
