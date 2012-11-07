@@ -113,12 +113,14 @@ module Hive
     def create_beehive_directories!
       BEEHIVE_DIRECTORIES.each do |dir|
         mkdir_p(File.join(path, dir), :verbose => true)
+        FileUtils.touch(File.join(path, dir, ".keep"), :verbose => true)
       end
     end
 
     def create_beehive_app_files!
       BEEHIVE_APP_FILES.reject{ |af| af.include?(".")}.each do |dir|
         mkdir_p(File.join(path, "beehive", dir), :verbose => true)
+        FileUtils.touch(File.join(path, "beehive", dir, ".keep"), :verbose => true)
       end
     end
   end
