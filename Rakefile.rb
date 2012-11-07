@@ -35,6 +35,7 @@ namespace :beehives do
 
   Hives.each do |ident, hive|
     namespace ident do
+
       desc "starts beehive in standalone mode"
       task :start do
         hive.assets.read

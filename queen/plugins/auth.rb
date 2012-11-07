@@ -18,6 +18,9 @@ class PluginAuthController < QueenController
   rescue
   end
 
+  def register
+  end
+
   def logout
     session.delete(:USER)
     redirect(request[:r] || "/")

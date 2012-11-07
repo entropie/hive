@@ -39,7 +39,8 @@ GEM
     ramaze (2012.04.14)
       innate (>= 2012.03)
     rmagick (2.13.1)
-    sass (3.2.1)
+    sass (3.2.2)
+    sequel (3.41.0)
     subcommand (1.0.6)
     term-ansicolor (1.0.7)
     tlsmail (0.0.1)
@@ -60,6 +61,7 @@ DEPENDENCIES
   ramaze
   rmagick
   sass
+  sequel
   subcommand
   term-ansicolor
   tlsmail

@@ -18,7 +18,7 @@ def debug(str = "")
 end
 
 module Hive
-  Version = [0, 0, 3]
+  Version = [0, 0, 5]
 
   def Version.to_s
     "Hive %s" % Version.join(".")

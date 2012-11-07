@@ -7,3 +7,6 @@
 [submodule "beehives/my"]
 	path = beehives/my
 	url = ssh://mit@dogitright.de/home/mit/Source/beehives/my/
+[submodule "beehives/klangwolke"]
+	path = beehives/klangwolke
+	url = ssh://mit@dogitright.de/home/mit/Source/beehives/klangwolke

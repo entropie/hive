@@ -56,7 +56,7 @@ module Hive
   module BeehiveValidator
     BEEHIVE_DIRECTORIES = %w'beehive config lib public spec tmp plugin'
 
-    BEEHIVE_APP_FILES   = %w'controller helper layout public view start.rb'
+    BEEHIVE_APP_FILES   = %w'controller helper layout public view model migration start.rb'
 
     def validate
       validate_beehive_directories and
@@ -191,7 +191,9 @@ module Hive
     end
 
     def controller(&blk)
-      Dir.glob("#{path}/beehive/controller/*.rb").each(&blk)
+      Dir.glob("#{path}/beehive/controller/*.rb").sort_by{ |f|
+        File.basename(f) == "#{identifier}.rb" ? 1 : 0
+      }.reverse.each(&blk)
     end
 
     def stylesheets_for_app
@@ -252,6 +254,14 @@ module Hive
     def require_plugins!
     end
 
+    def require_models!
+      debug "loading models"
+      Dir.glob("#{app_root("model")}/*.rb").each do |model|
+        debug " #{File.shorten(model)}"
+        require model
+      end
+    end
+
     def set_enviroment(options = { })
       Queen.const_set("BEEHIVE", self)
 
@@ -263,6 +273,8 @@ module Hive
 
       require_enviroment!
       require_plugins!
+
+      require_models! if config.database
 
       debug "asking queen for global enviroment..."
       queen.controller do |queen_controller|

@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 # -*- mode:ruby -*-
 
 require File.join(File.dirname(File.expand_path(__FILE__)), "..", "lib", "hive.rb")
@@ -47,6 +48,12 @@ Hives.each do |ident, beehive|
       puts "Files for #{ident} in #{beehive.path}"
       puts
       puts beehive.list
+    end
+
+    sopts.on("-m", "--migrate") do
+      beehive.assets.read
+      cfg = beehive.config.database
+      puts `sequel -m #{beehive.app_root("migration")} postgres://#{cfg[:user]}:#{cfg[:password]}@#{cfg[:host]}/#{cfg[:database]}`
     end
   end
 end

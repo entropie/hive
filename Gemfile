@@ -6,7 +6,7 @@ gem "json"
 gem "haml"
 gem "sass"
 gem "pg"
-
+gem "sequel"
 
 gem 'ramaze'
 #gem "thin"
