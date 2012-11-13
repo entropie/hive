@@ -42,6 +42,21 @@ namespace :beehives do
         hive.standalone!
       end
 
+      desc "executes scripts"
+      task :script do
+        hive.assets.read
+        hive.set_enviroment
+        script = ENV["SCRIPT"]
+
+        abort "what script to run? use SCRIPT=foo" unless script
+        unless script.include?(".")
+          script = "#{script}.rb"
+        end
+
+        script_path = hive.app_root("script", script)
+        load script_path
+      end
+
     end
   end
 end

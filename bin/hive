@@ -50,10 +50,11 @@ Hives.each do |ident, beehive|
       puts beehive.list
     end
 
-    sopts.on("-m", "--migrate") do
+    sopts.on("-m", "--migrate [VERSION]") do |version|
       beehive.assets.read
       cfg = beehive.config.database
-      puts `sequel -m #{beehive.app_root("migration")} postgres://#{cfg[:user]}:#{cfg[:password]}@#{cfg[:host]}/#{cfg[:database]}`
+      version_str = " -M #{version}" if version
+      system(a="sequel -E #{version_str} -m #{beehive.app_root("migration")} postgres://#{cfg[:user]}:#{cfg[:password]}@#{cfg[:host]}/#{cfg[:database]}")
     end
   end
 end
