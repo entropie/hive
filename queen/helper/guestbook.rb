@@ -69,6 +69,18 @@ module Hive
       class GuestBook
         attr_reader :beehive
 
+        class Captcha < Struct.new(:question, :answer)
+        end
+
+        Captchas = [
+                    Captcha.new("Welche Farbe hat eine Banane?", "gelb"),
+                    Captcha.new("Was ist das Ergebnis wenn man 5 und 3 addiert?", "8")
+                   ]
+
+        def self.captcha
+          return Captchas.sort_by{ rand }.first
+        end
+
         def initialize(beehive)
           @beehive = beehive
         end

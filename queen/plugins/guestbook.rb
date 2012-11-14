@@ -16,7 +16,14 @@ class PluginGuestbookController < QueenController
 
   def create
     name, email, text = request[:name], request[:email], request[:text]
+
+
     errors = []
+
+    canswer, captcha = session[:canswer], request[:captcha]
+    if canswer.downcase != captcha.downcase
+      errors << [:captcha]
+    end
 
     [:name, :email, :text].each do |field|
       if request[field].nil? or request[field].empty?
