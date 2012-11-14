@@ -42,10 +42,15 @@ Dir.glob("beehives/*").each do |beehive|
         run "cd #{beehive_path} && git pull origin master"
       end
 
+      task :restart do
+        run "touch #{File.join(current_path, "beehives", beehive.to_s, "tmp", "restart.txt")}"
+      end
+
       task :default do
         transaction do
           update
           update_beehive
+          restart
         end
       end
 
