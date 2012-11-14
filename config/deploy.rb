@@ -4,7 +4,6 @@ set :application, "hive"
 set :repository,  "git://github.com/entropie/hive.git"
 
 set :scm, :git
-# Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
 
 set :branch, "master"
 
@@ -12,33 +11,57 @@ role :web, "pullies"
 role :app, "pullies"
 role :db,  "pullies", :primary => true
 
-set :deploy_via, :remote_cache
+set :deploy_via,                  :remote_cache
+set :normalize_asset_timestamps,  false
+set :git_enable_submodules,       false
 
-set :normalize_asset_timestamps, false
+Dir.glob("beehives/*").each do |beehive|
+  beehive = File.basename(beehive).to_sym
 
-set :git_enable_submodules, true
+  next if beehive == :test
+  task beehive do
 
-# if you want to clean up old releases on each deploy uncomment this:
-# after "deploy:restart", "deploy:cleanup"
+    set :deploy_to,             "/u/apps/#{beehive}"
+    set :beehive_scm_source,    "/home/mit/Source/beehives/#{beehive}"
+    set :beehive_path,          File.join(current_path, "beehives", beehive.to_s)
 
-# if you're still using the script/reaper helper you will need
-# these http://github.com/rails/irs_process_scripts
+    namespace :deploy do
 
-# If you are using Passenger mod_rails uncomment this:
-# namespace :deploy do
-#   task :start do ; end
-#   task :stop do ; end
-#   task :restart, :roles => :app, :except => { :no_release => true } do
-#     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
-#   end
-# end
+      task :sync_beehive do
+        cd_to = "cd #{beehive_path} && "
+        run "#{cd_to} git branch web"
+        run "#{cd_to} git checkout web"
+        run "#{cd_to} git add ."
+        run "#{cd_to} git commit -am 'update from web'"
+        run "#{cd_to} git push origin web:master"
+      end
 
+      task :update_beehive do
+        run "rm -rf #{beehive_path}" # rm submodule path
+        run "cd #{File.dirname(beehive_path)} && git clone #{beehive_scm_source} #{beehive}"
+        run "cd #{beehive_path} && git pull origin master"
+      end
+
+      task :default do
+        transaction do
+          update
+          update_beehive
+        end
+      end
+
+      task :setup do
+        dirs = [deploy_to, releases_path, shared_path]
+        run "mkdir -p #{dirs.join(' ')}"
+        run "chmod g+w #{dirs.join(' ')}" if fetch(:group_writable, true)
+      end
+    end
+
+  end
+end
 
 namespace :deploy do
   task :default do
-    #beehive = ENV['BEEHIVE']
-
-    #abort"no beehive given, use BEEHIVE=foo cap deploy"
-    update
+    $stderr.puts "dont call deploy directly, use `cap <beehive> deploy' instead"
+    exit 1
   end
 end
