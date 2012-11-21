@@ -228,7 +228,6 @@ module Hive
                                      :host => config.host)
 
       layout_dir = File.join(path, "beehive", "layout")
-
       # if File.exist?(layout_dir)
       #  opts[:layouts] = layout_dir
       # end
