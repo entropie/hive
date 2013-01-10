@@ -13,6 +13,7 @@ gem 'ramaze'
 gem "mongrel"
 gem "faker"
 gem "RedCloth"
+#gem "kramdown"
 
 gem "bacon"
 gem "dalli"
