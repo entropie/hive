@@ -2,12 +2,14 @@
 
 source :rubygems
 
+
 gem "json"
 gem "haml"
 gem "sass"
 gem "pg"
 gem "sequel"
 
+gem "rack"
 gem 'ramaze'
 #gem "thin"
 gem "mongrel"
