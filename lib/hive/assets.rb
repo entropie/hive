@@ -7,6 +7,29 @@ module Hive
 
   class BeehiveAssets
 
+    def self.make_static_js
+      beehive = Queen::BEEHIVE
+
+      files = beehive.config.js.map{ |f| beehive.app_root("public/js", f)}
+
+      files.reject!{ |f| not File.exist?(f)}
+
+      afile = beehive.app_root("public/js/app.js")
+      File.open(afile, 'w+') do |fp|
+        files.each do |file|
+          unless file.include?("min")
+            puts "uglify: #{file}"
+            fp.puts Uglifier.new.compile(File.read(file))
+          else
+            puts "uglify skipped: #{file}"
+            fp.puts File.readlines(file).join
+          end
+          fp.puts ""
+        end
+      end
+      puts ">>> #{afile} is #{File.size(afile)/1024} KBytes"
+    end
+
     class Config
       attr_accessor :port
       attr_accessor :css
@@ -31,9 +54,6 @@ module Hive
 
     def config
       @config ||= Config.new(beehive)
-    end
-
-    def beehive_specific
     end
 
     def read

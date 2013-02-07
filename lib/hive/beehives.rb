@@ -41,8 +41,8 @@ module Hive
           next
         end
 
-        debug ""
-        debug "loading beehive: '#{symb}'"
+        # debug ""
+        # debug "loading beehive: '#{symb}'"
         if not hive or (hive and File.basename(hv) == hive.to_s)
           m[symb] = Beehive.new(hv)
         end
@@ -163,7 +163,7 @@ module Hive
     end
 
     def mode
-      :dev                      # FIXME: hardcoded
+      @mode || :dev
     end
 
     def validate
@@ -197,14 +197,26 @@ module Hive
     end
 
     def stylesheets_for_app
-      config.css.map{ |ss|
-        csspath = if ss.last[0..0] == "/" then ss.last else "/css/#{ ss.last }" end
-        "<link rel='stylesheet' rel='#{ss.first}' type='text/css' href='#{ csspath }?#{static_url_apendix}' />"
-      }.join("\n")
+      if mode == :live
+        "<link rel='stylesheet' rel='stylesheet' type='text/css' href='/css/bootstrap.min.css?#{static_url_apendix}' />\n" +
+          "<link rel='stylesheet' rel='stylesheet' type='text/css' href='/css/application.css?#{static_url_apendix}' />"
+      else
+        config.css.map{ |ss|
+          csspath = if ss.last[0..0] == "/" then ss.last else "/css/#{ ss.last }" end
+          "<link rel='stylesheet' rel='#{ss.first}' type='text/css' href='#{ csspath }?#{static_url_apendix}' />"
+        }.join("\n")
+      end
     end
 
     def javascripts_for_app
-      config.js.map{ |js| "<script type='text/javascript' src='/js/#{ js }?#{static_url_apendix}'></script>" }.join("\n")
+      if mode == :live
+        unless File.exist?(app_root("public/js/app.js"))
+          BeehiveAssets.make_static_js
+        end
+        "<script type='text/javascript' src='/js/app.js?#{static_url_apendix}'></script>"
+      else
+        config.js.map{ |js| "<script type='text/javascript' src='/js/#{ js }?#{static_url_apendix}'></script>" }.join("\n")
+      end
     end
 
     def view_path
@@ -298,6 +310,9 @@ module Hive
     def start!(opts)
       set_enviroment(opts)
 
+      p 1
+      @mode = opts[:mode]
+
       debug; debug;
       debug white { "starting #{identifier} in +++#{mode}+++"}
       debug; debug
@@ -309,6 +324,7 @@ module Hive
     def standalone!
       set_enviroment
 
+      @mode = :life
       debug; debug;
       debug white { "starting #{identifier} in +++#{mode}+++"}
       debug; debug

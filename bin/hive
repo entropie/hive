@@ -50,6 +50,12 @@ Hives.each do |ident, beehive|
       puts beehive.list
     end
 
+    sopts.on("-M", "--minify") do
+      beehive.assets.read
+      beehive.set_enviroment
+      BeehiveAssets.make_static_js
+    end
+
     sopts.on("-C", "--check-migration") do 
       beehive.assets.read
       beehive.set_enviroment
@@ -57,7 +63,7 @@ Hives.each do |ident, beehive|
       Sequel::Migrator.check_current(DB, beehive.app_root("migration"))
     end
 
-    sopts.on("-m", "--migrate [FROMTO]") do |fromto|
+    sopts.on("-m", "--migrate [FROM,TO]") do |fromto|
       from, to = fromto.split(",").map{ |a| a.to_i }
       beehive.assets.read
       beehive.set_enviroment
