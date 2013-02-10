@@ -67,7 +67,7 @@ DEPENDENCIES
   json
   mongrel
   pg
-  rack (>= 1.5.1)
+  rack (>= 1.5.2)
   ramaze
   rmagick
   sass
