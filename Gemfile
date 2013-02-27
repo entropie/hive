@@ -4,7 +4,7 @@ source :rubygems
 
 gem "rack", ">=1.5.2"
 gem "json"
-gem "haml"
+gem "haml", "=3.1.7"
 gem "sass"
 gem "pg"
 gem "sequel"
@@ -23,3 +23,4 @@ gem "tlsmail"
 gem "execjs"
 gem "uglifier"
 
+gem "koala"
