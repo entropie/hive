@@ -59,6 +59,27 @@ namespace :beehives do
 
     end
   end
+
+  namespace :klangwolke do
+    namespace "tunnel" do
+      PORT = ENV["LOCAL_PORT"] || 7000
+      desc "Start a reverse tunnel from FACEBOOK_CONFIG['host'] to localhost:#{PORT}"
+      task "start" do
+        puts "Tunneling #{FACEBOOK_CONFIG['host']}:#{FACEBOOK_CONFIG['port']} to 0.0.0.0:#{PORT}"
+        exec "ssh -p 22022 -nNT -g -R *:#{FACEBOOK_CONFIG['port']}:0.0.0.0:#{PORT} #{FACEBOOK_CONFIG['host']}"
+      end
+
+      desc "Check if reverse tunnel is running"
+      task "status" do
+        if `ssh #{FACEBOOK_CONFIG['host']} netstat -an |
+        egrep "tcp.*:#{FACEBOOK_CONFIG['port']}.*LISTEN" | wc`.to_i > 0
+          puts "Seems ok"
+        else
+          puts "Down"
+        end
+      end
+    end
+  end
 end
 
 

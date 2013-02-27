@@ -37,6 +37,7 @@ module Hive
       attr_accessor :js
       attr_accessor :host
       attr_accessor :database
+      attr_accessor :facebook
 
       attr_reader   :beehive
 

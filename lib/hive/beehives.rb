@@ -198,8 +198,8 @@ module Hive
 
     def stylesheets_for_app
       if mode == :live
-        "<link rel='stylesheet' rel='stylesheet' type='text/css' href='/css/bootstrap.min.css?#{static_url_apendix}' />\n" +
-          "<link rel='stylesheet' rel='stylesheet' type='text/css' href='/css/application.css?#{static_url_apendix}' />"
+        "<link rel='stylesheet' type='text/css' href='/css/bootstrap.min.css?#{static_url_apendix}' />\n" +
+          "<link rel='stylesheet' type='text/css' href='/css/application.css?#{static_url_apendix}' />"
       else
         config.css.map{ |ss|
           csspath = if ss.last[0..0] == "/" then ss.last else "/css/#{ ss.last }" end
@@ -309,8 +309,6 @@ module Hive
 
     def start!(opts)
       set_enviroment(opts)
-
-      p 1
       @mode = opts[:mode]
 
       debug; debug;
@@ -324,7 +322,7 @@ module Hive
     def standalone!
       set_enviroment
 
-      @mode = :life
+      @mode = :test
       debug; debug;
       debug white { "starting #{identifier} in +++#{mode}+++"}
       debug; debug
