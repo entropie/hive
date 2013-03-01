@@ -17,7 +17,7 @@ module Hive
       afile = beehive.app_root("public/js/app.js")
       File.open(afile, 'w+') do |fp|
         files.each do |file|
-          unless file.include?("min")
+          if not file.include?("min") and not file.include?("pack")
             puts "uglify: #{file}"
             fp.puts Uglifier.new.compile(File.read(file))
           else
