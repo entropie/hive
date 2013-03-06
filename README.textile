@@ -1,0 +1,4 @@
+hive
+====
+
+Hive is a minimalistic modular framework for serving/deploying/managing multiple ramaze apps.
