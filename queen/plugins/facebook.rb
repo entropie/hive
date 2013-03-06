@@ -6,7 +6,7 @@
 module FaceBook
 
   FACEBOOK_DEFAULT_PROFILE_PIC_SHA = "a36c79a464fe82b8ea6a77cecce9546e31b4f4e5"
-  
+
   include Koala
 
   def self.app_config
@@ -33,6 +33,17 @@ module FaceBook
 
   def self.callback_url
     app_config[mode][:callback_url]
+  end
+end
+
+class QueenController < Ramaze::Controller
+  def meta_facebook
+    ret = []
+    [:title, :image, :description, :type].each do |s|
+      val = instance_variable_get("@fb_#{s}")
+      ret << %Q'<meta property="og:#{s}" content="#{val}" />' if val
+    end
+    ret.join "\n"
   end
 end
 

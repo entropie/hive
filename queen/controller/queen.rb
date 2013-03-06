@@ -79,15 +79,6 @@ class QueenController < Ramaze::Controller
     Queen::BEEHIVE.javascripts_for_app
   end
 
-  def meta_facebook
-    ret = []
-    [:title, :image, :description, :type].each do |s|
-      val = instance_variable_get("@fb_#{s}")
-      ret << %Q'<meta property="og:#{s}" content="#{val}" />' if val
-    end
-    ret.join "\n"
-  end
-
   def beehive_render_file(file, opts = { })
     render_file(File.join(BEEHIVE.view_path, file), opts)
   end
