@@ -326,8 +326,15 @@ module Hive
       Ramaze.start(ropts)
     end
 
+    def delete_generated_files
+      [app_root("public/css/app.css"), app_root("public/js/app.js")].each do |gf|
+        FileUtils.rm(gf, :verbose => true)
+      end
+    end
+
     def standalone!
       set_enviroment
+      delete_generated_files
 
       @mode = :test
       debug; debug;
