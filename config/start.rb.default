@@ -9,3 +9,5 @@ Queen::hives.load( identifier )
 beehive = Queen::hives[ identifier ]
 beehive.assets.read
 beehive.standalone!
+
+# DB.disconnect # uncomment if you use postgres with nginx/passenger

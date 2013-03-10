@@ -7,11 +7,42 @@ setup do |c|
   c.host        = "0.0.0.0"
   c.port        = 9000
 
+  # c.database = {
+  #   :adapter   => :postgres,
+  #   :user      => "",
+  #   :password  => "",
+  #   :host      => "",
+  #   :database  => ""
+  # }
+
+  # c.facebook = {
+  #   :live => {
+  #     :id        =>    "",
+  #     :secret    =>    "",
+  #     :callback_url => ""
+  #   },
+  #   :test => {
+  #     :id        =>    "",
+  #     :secret    =>    "",
+  #     :callback_url => ""
+  #   }
+  # }
+
   c.css         = [
-                   [:screen, "bootstrap.min.css"], [:screen, "test.css"]
+                   
+                   [:screen, "bootstrap.css"],
+                   # uncomment following to "bootstrap.css if you want to use the bootstrap.sass
+                   # file from your view/css directory for editing
+                   #[:screen, "bootstrap.css"],
+                   
+                   [:screen, "screen.css"]
                   ]
 
-  c.js          =   ["modernizr.js", "jquery.min.js", "application.js"]
+  c.js          = ["modernizr.js",
+                   "jquery.min.js",
+                   "bootstrap.min.js",
+                   "bootstrap-image-gallery.js",
+                   "application.js"]
 
 end
 

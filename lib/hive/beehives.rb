@@ -89,7 +89,14 @@ module Hive
       create_config_ru!
       create_default_config!
 
+      copy_defaults_from(:ramaze)
+
       validate
+    end
+    def copy_defaults_from(what)
+      cp_r(File.join(root, "defaults", what.to_s, "beehive"),
+           File.join(path),
+           :verbose => true)
     end
 
     def create_config_ru!
@@ -198,8 +205,8 @@ module Hive
 
     def stylesheets_for_app
       if mode == :live
-        "<link rel='stylesheet' type='text/css' href='/css/bootstrap.min.css?#{static_url_apendix}' />\n" +
-          "<link rel='stylesheet' type='text/css' href='/css/application.css?#{static_url_apendix}' />"
+        #"<link rel='stylesheet' type='text/css' href='/css/bootstrap.min.css?#{static_url_apendix}' />\n" +
+        "<link rel='stylesheet' type='text/css' href='/css/application.css?#{static_url_apendix}' />"
       else
         config.css.map{ |ss|
           csspath = if ss.last[0..0] == "/" then ss.last else "/css/#{ ss.last }" end

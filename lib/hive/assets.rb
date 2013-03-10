@@ -12,7 +12,7 @@ module Hive
 
       files = beehive.config.js.map{ |f| beehive.app_root("public/js", f)}
 
-      files.reject!{ |f| not File.exist?(f)}
+      files.reject!{ |f| if File.exist?(f) then false else puts "skipping #{f}"; true end }
 
       afile = beehive.app_root("public/js/app.js")
       File.open(afile, 'w+') do |fp|
