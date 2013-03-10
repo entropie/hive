@@ -4,13 +4,14 @@
 #
 
 require "lib/hive.rb"
+
 include Hive
 
 namespace :beehives do
 
   Hives = Queen::hives.load
   include Queen
-  include Term::ANSIColor
+#  include Term::ANSIColor
 
   $DEBUG = true if ENV["DEBUG"] == "true"
 

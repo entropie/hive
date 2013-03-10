@@ -328,7 +328,7 @@ module Hive
 
     def delete_generated_files
       [app_root("public/css/app.css"), app_root("public/js/app.js")].each do |gf|
-        FileUtils.rm(gf, :verbose => true)
+        FileUtils.rm(gf, :verbose => true) if File.exists?(gf)
       end
     end
 
