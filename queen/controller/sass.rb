@@ -22,6 +22,7 @@ class SassController < Ramaze::Controller
 
     str = ""
     beehive.config.css.each { |mt, file|
+      next if file.include?(".min") or file.include?("application")
       str << %Q'@import "#{file.gsub("css", "sass")}"\n'
     }
     str

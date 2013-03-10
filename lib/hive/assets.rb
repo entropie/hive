@@ -30,6 +30,30 @@ module Hive
       puts ">>> #{afile} is #{File.size(afile)/1024} KBytes"
     end
 
+    def self.make_static_css
+      beehive = Queen::BEEHIVE
+      files = beehive.config.css.map{ |_, f| f}
+
+      afile = beehive.app_root("public/css/app.css")
+
+      File.open(afile, 'w+') do |fp|
+        files.each do |file|
+          if not file.include?("min") and not file.include?("pack")
+            nfile = beehive.app_root("view/css/", file.gsub(".css", ".sass"))
+            sass = Sass::Engine.new(File.readlines(nfile).join, :style => :compressed)
+            puts "sass2css: #{nfile}"
+            fp.puts sass.render
+          else
+            nfile = beehive.app_root("public/css/", file)
+            puts "sass2css: ignoring: #{file}"
+            fp.puts File.readlines(nfile).join
+          end
+          fp.puts ""
+        end
+      end
+      puts ">>> #{afile} is #{File.size(afile)/1024} KBytes"
+    end
+
     class Config
       attr_accessor :port
       attr_accessor :css

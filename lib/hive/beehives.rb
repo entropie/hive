@@ -205,8 +205,8 @@ module Hive
 
     def stylesheets_for_app
       if mode == :live
-        #"<link rel='stylesheet' type='text/css' href='/css/bootstrap.min.css?#{static_url_apendix}' />\n" +
-        "<link rel='stylesheet' type='text/css' href='/css/application.css?#{static_url_apendix}' />"
+        BeehiveAssets.make_static_css unless File.exist?(app_root("public/css/app.css"))
+        "<link rel='stylesheet' rel='screen' type='text/css' href='/css/app.css?#{static_url_apendix}' />"
       else
         config.css.map{ |ss|
           csspath = if ss.last[0..0] == "/" then ss.last else "/css/#{ ss.last }" end
