@@ -318,6 +318,7 @@ module Hive
       set_enviroment(opts)
       @mode = opts[:mode]
 
+      delete_generated_files
       debug; debug;
       debug white { "starting #{identifier} in +++#{mode}+++"}
       debug; debug
