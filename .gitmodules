@@ -10,3 +10,6 @@
 [submodule "beehives/klangwolke"]
 	path = beehives/klangwolke
 	url = ssh://mit@dogitright.de/home/mit/Source/beehives/klangwolke
+[submodule "beehives/cal"]
+	path = beehives/cal
+	url = ssh://mit@dogitright.de/home/mit/Source/beehives/cal
