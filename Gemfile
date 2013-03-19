@@ -22,6 +22,9 @@ gem "rmagick", :require => "RMagick"
 gem "tlsmail"
 gem "execjs"
 gem "uglifier"
-
+gem "rdiscount"
 gem "system_timer"
 gem "koala"
+gem "carrierwave"
+gem 'carrierwave-sequel', :require => 'carrierwave/sequel'
+gem "calendar_helper"
