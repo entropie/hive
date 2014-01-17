@@ -13,3 +13,6 @@
 [submodule "beehives/cal"]
 	path = beehives/cal
 	url = ssh://mit@dogitright.de/home/mit/Source/beehives/cal
+[submodule "beehives/ingress"]
+	path = beehives/ingress
+	url = ssh://mit@dogitright.de/home/mit/Source/beehives/ingress
