@@ -1,18 +1,18 @@
 [submodule "beehives/mike"]
 	path = beehives/mike
-	url = ssh://mit@dogitright.de/home/mit/Source/beehives/mike/
+	url = ssh://mc/home/mit/Source/beehives/mike/
 [submodule "beehives/dir"]
 	path = beehives/dir
-	url = ssh://mit@dogitright.de/home/mit/Source/beehives/dir/
+	url = ssh://mc/home/mit/Source/beehives/dir/
 [submodule "beehives/my"]
 	path = beehives/my
-	url = ssh://mit@dogitright.de/home/mit/Source/beehives/my/
+	url = ssh://mc/home/mit/Source/beehives/my/
 [submodule "beehives/klangwolke"]
 	path = beehives/klangwolke
-	url = ssh://mit@dogitright.de/home/mit/Source/beehives/klangwolke
+	url = ssh://mc/home/mit/Source/beehives/klangwolke
 [submodule "beehives/cal"]
 	path = beehives/cal
-	url = ssh://mit@dogitright.de/home/mit/Source/beehives/cal
+	url = ssh://mc/home/mit/Source/beehives/cal
 [submodule "beehives/ingress"]
 	path = beehives/ingress
-	url = ssh://mit@dogitright.de/home/mit/Source/beehives/ingress
+	url = ssh://mc/home/mit/Source/beehives/ingress

@@ -12,23 +12,32 @@ BEEHIVES = Dir.glob("beehives/*").map { |b| File.basename(b) }
 
 requested_beehive = ARGV.first
 
-if requested_beehive and BEEHIVES.include?(requested_beehive)
-  case requested_beehive
-  when "klangwolke"
-    role :web,      "dynamiet.nine.ch"
-    role :app,      "dynamiet.nine.ch"
-    role :db,       "dynamiet.nine.ch", :primary => true
-  else
-    role :web,      "pullies"
-    role :app,      "pullies"
-    role :db,       "pullies",          :primary => true
-  end
-end
+# if requested_beehive and BEEHIVES.include?(requested_beehive)
+#   case requested_beehive
+#   when "klangwolke"
+#     role :web,      "dynamiet.nine.ch"
+#     role :app,      "dynamiet.nine.ch"
+#     role :db,       "dynamiet.nine.ch", :primary => true
+#   else
+#     role :web,      "pullies"
+#     role :app,      "pullies"
+#     role :db,       "pullies",          :primary => true
+#   end
+# end
+
+role :web,      "mc"
+role :app,      "mc"
+role :db,       "mc", :primary => true
+
 
 set :deploy_via,                  :remote_cache
 set :normalize_asset_timestamps,  false
 set :git_enable_submodules,       false
 
+
+set :default_environment, {
+  'PATH' => "/usr/local/bin:$PATH"
+}
 
 
 
