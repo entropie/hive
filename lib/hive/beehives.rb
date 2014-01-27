@@ -54,7 +54,7 @@ module Hive
   end
 
   module BeehiveValidator
-    BEEHIVE_DIRECTORIES = %w'beehive config lib public spec tmp plugin'
+    BEEHIVE_DIRECTORIES = %w'beehive config lib public spec tmp plugin log'
 
     BEEHIVE_APP_FILES   = %w'controller helper layout public view model migration start.rb'
 
