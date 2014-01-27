@@ -173,6 +173,14 @@ module Hive
       @mode || :dev
     end
 
+    def production?
+      mode == :life
+    end
+
+    def development?
+      mode == :dev
+    end
+
     def validate
       extend(BeehiveValidator).validate
     end
