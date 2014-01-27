@@ -92,6 +92,7 @@ module Hive
       create_beehive_directories!
       create_beehive_app_files!
 
+      create_config_ru!
       copy_default_config_files!
 
       copy_defaults_from(:ramaze)
@@ -111,7 +112,7 @@ module Hive
     end
 
     def copy_default_config_files!
-      cfgs = %w'nginx.conf unicorn.rb unicorn_init.sh config.ru start.rb beehive.rb'
+      cfgs = %w'nginx.conf unicorn.rb unicorn_init.sh beehive.rb'
 
       cfgs.each do |c|
         file = File.join(root, "config", "#{c}.default")
@@ -132,15 +133,15 @@ module Hive
       cp(file, File.join(path, 'config.ru'), :verbose => true)
     end
 
-    def create_start_rb!
-      file = File.join(root, "config", "start.rb.default")
-      cp(file, File.join(path, 'beehive', 'start.rb'), :verbose => true)
-    end
+    # def create_start_rb!
+    #   file = File.join(root, "config", "start.rb.default")
+    #   cp(file, File.join(path, 'beehive', 'start.rb'), :verbose => true)
+    # end
 
-    def create_default_config!
-      file = File.join(root, "config", "beehive.rb.default")
-      cp(file, File.join(path, 'config', 'beehive.rb'), :verbose => true)
-    end
+    # def create_default_config!
+    #   file = File.join(root, "config", "beehive.rb.default")
+    #   cp(file, File.join(path, 'config', 'beehive.rb'), :verbose => true)
+    # end
 
     def create_beehive_directories!
       BEEHIVE_DIRECTORIES.each do |dir|
