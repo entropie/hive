@@ -78,43 +78,68 @@ module Hive
     include BeehiveValidator
     include FileUtils
 
+    REPLACER = {
+      /%%%name%%%/   => proc{ identifier },
+      /%%%domain%%%/ => proc { config.domain || @domain || identifier }
+    }
+
     def root
       @root ||= Queen::ROOT
     end
 
-    def create!
+    def create!(domain)
+      @domain = domain
       create_beehive_directories!
       create_beehive_app_files!
-      create_start_rb!
-      create_config_ru!
-      create_default_config!
+
+      copy_default_config_files!
 
       copy_defaults_from(:ramaze)
 
       validate
     end
+
+    def substitute_variables(file)
+      puts "attemping to replace placeholder in #{File.basename(file)}..."
+
+      content = File.readlines(file).join
+
+      REPLACER.each do |r,b|
+        content.gsub!(r, instance_eval(&b).to_s)
+      end
+      File.open(file, 'w+'){ |fp| fp.puts(content) }
+    end
+
+    def copy_default_config_files!
+      cfgs = %w'nginx.conf unicorn.rb unicorn_init.sh config.ru start.rb beehive.rb'
+
+      cfgs.each do |c|
+        file = File.join(root, "config", "#{c}.default")
+        outfile = File.join(path, 'config', c)
+        cp(file, outfile, :verbose => true)
+
+        substitute_variables(outfile)
+      end
+    end
+
     def copy_defaults_from(what)
-      cp_r(File.join(root, "defaults", what.to_s, "beehive"),
-           File.join(path),
-           :verbose => true)
+      file = File.join(root, "defaults", what.to_s, "beehive")
+      cp_r(file, File.join(path), :verbose => true)
     end
 
     def create_config_ru!
-      cp(File.join(root, "config", "config.ru.default"),
-         File.join(path, 'config.ru'),
-         :verbose => true)
+      file = File.join(root, "config", "config.ru.default")
+      cp(file, File.join(path, 'config.ru'), :verbose => true)
     end
 
     def create_start_rb!
-      cp(File.join(root, "config", "start.rb.default"),
-         File.join(path, 'beehive', 'start.rb'),
-         :verbose => true)
+      file = File.join(root, "config", "start.rb.default")
+      cp(file, File.join(path, 'beehive', 'start.rb'), :verbose => true)
     end
 
     def create_default_config!
-      cp(File.join(root, "config", "beehive.rb.default"),
-         File.join(path, 'config', 'beehive.rb'),
-         :verbose => true)
+      file = File.join(root, "config", "beehive.rb.default")
+      cp(file, File.join(path, 'config', 'beehive.rb'), :verbose => true)
     end
 
     def create_beehive_directories!

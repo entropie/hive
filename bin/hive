@@ -33,7 +33,7 @@ command(:create) do |sopts|
 
   sopts.on("-n", "--name BEEHIVE", "name of beehive") do |beehive|
     newbeehive = Hive::Beehive.create(beehive)
-    if newbeehive.create!
+    if newbeehive.create!(ENV["DOMAIN"])
       puts "done and valid!"
       puts "make sure to edit #{File.join(newbeehive.path, 'config', 'beehive.rb')}"
     end

@@ -1,0 +1,42 @@
+upstream unicorn {
+  server unix:/tmp/unicorn.%%%name%%%.sock fail_timeout=0;
+}
+
+
+server {
+  listen       80;
+  server_name  %%%domain%%%;
+
+  access_log   /u/apps/%%%name%%%/current/beehives/%%%name%%%/log/access.log;
+  error_log    /u/apps/%%%name%%%/current/beehives/%%%name%%%/log/error.log;
+
+  root         /u/apps/%%%name%%%/current/beehives/%%%name%%%/public;
+
+
+  # location ^~ /assets/ {
+  #   gzip_static on;
+  #   expires max;
+  #   add_header Cache-Control public;
+  # }
+
+
+  try_files $uri/index.html $uri @unicorn;
+
+  location @unicorn {
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_redirect off;
+    proxy_pass http://unicorn;
+  }
+
+
+  client_max_body_size 310M;
+  passenger_enabled    on;
+
+  error_page  404              /404.html;
+  error_page  500 502 503 504  /500.html;
+
+ # location ~ ^/~(.+?)(/.*)?$ {
+ #   alias /home/$1/public_html$2;
+ # }
+}

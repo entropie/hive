@@ -28,14 +28,14 @@ setup do |c|
   #   }
   # }
 
+  c.domain      = "%%%domain%%%"
+
   c.css         = [
-                   
                    [:screen, "bootstrap.css"],
                    #[:screen, "bootstrap-responsive.css"],
                    # uncomment following to "bootstrap.css if you want to use the bootstrap.sass
                    # file from your view/css directory for editing
                    #[:screen, "bootstrap.css"],
-                   
                    [:screen, "screen.css"]
                   ]
 
