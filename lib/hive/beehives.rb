@@ -174,7 +174,7 @@ module Hive
     end
 
     def production?
-      mode == :life
+      mode == :production
     end
 
     def development?
