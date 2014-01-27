@@ -2,6 +2,7 @@
 
 source :rubygems
 
+gem "unicorn"
 gem "rack", ">=1.5.2"
 gem "json"
 gem "haml", "=3.1.7"
@@ -16,7 +17,7 @@ gem "bacon"
 gem "dalli"
 gem "term-ansicolor", "=1.0.7", :require => "term/ansicolor"
 gem "builder"
-gem "capistrano"
+gem "capistrano", "=2.15.5"
 gem "subcommand"
 gem "rmagick", :require => "RMagick"
 gem "tlsmail"
