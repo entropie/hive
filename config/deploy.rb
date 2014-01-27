@@ -1,3 +1,4 @@
+require File.join(File.dirname(__FILE__), "..", "lib", "hive.rb")
 require "bundler/capistrano"
 
 set :application, "hive"
@@ -12,24 +13,6 @@ BEEHIVES = Dir.glob("beehives/*").map { |b| File.basename(b) }
 
 requested_beehive = ARGV.first
 
-# if requested_beehive and BEEHIVES.include?(requested_beehive)
-#   case requested_beehive
-#   when "klangwolke"
-#     role :web,      "dynamiet.nine.ch"
-#     role :app,      "dynamiet.nine.ch"
-#     role :db,       "dynamiet.nine.ch", :primary => true
-#   else
-#     role :web,      "pullies"
-#     role :app,      "pullies"
-#     role :db,       "pullies",          :primary => true
-#   end
-# end
-
-role :web,      "mc"
-role :app,      "mc"
-role :db,       "mc", :primary => true
-
-
 set :deploy_via,                  :remote_cache
 set :normalize_asset_timestamps,  false
 set :git_enable_submodules,       false
@@ -38,7 +21,6 @@ set :git_enable_submodules,       false
 set :default_environment, {
   'PATH' => "/usr/local/bin:$PATH"
 }
-
 
 
 BEEHIVES.each do |beehive|
@@ -50,6 +32,19 @@ BEEHIVES.each do |beehive|
     set :deploy_to,             "/u/apps/#{beehive}"
     set :beehive_scm_source,    "/home/mit/Source/beehives/#{beehive}"
     set :beehive_path,          File.join(current_path, "beehives", beehive.to_s)
+
+
+    # get configuration variables from beehive
+    bhive = Hive::Beehives.load(:klangwolke)[:klangwolke]
+    bhive.assets.read
+
+
+    # set roles from config variables
+    if not (config_roles = bhive.config.roles).nil?
+      [:web, :app, :db].each do |r|
+        role r, config_roles[r]
+      end
+    end
 
     namespace :deploy do
 
