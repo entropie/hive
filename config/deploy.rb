@@ -61,21 +61,6 @@ BEEHIVES.each do |beehive|
       end
       after "deploy:setup", "deploy:setup_config"
 
-      # task :symlink_config, roles: :app do
-      #   run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
-      # end
-      # after "deploy:finalize_update", "deploy:symlink_config"
-
-      # desc "Make sure local git is in sync with remote."
-      # task :check_revision, roles: :web do
-      #   unless `git rev-parse HEAD` == `git rev-parse origin/master`
-      #     puts "WARNING: HEAD is not the same as origin/master"
-      #     puts "Run `git push` to sync changes."
-      #     exit
-      #   end
-      # end
-      # before "deploy", "deploy:check_revision"
-
       task :sync_beehive do
         cd_to = "cd #{beehive_path} && "
         run "#{cd_to} git branch web"
@@ -125,7 +110,8 @@ BEEHIVES.each do |beehive|
         desc "[internal] Creates the symlink to uploads shared folder for the most recently deployed version."
         task :symlink, :except => { :no_release => true } do
           run "rm -rf #{release_path}/beehives/klangwolke/media"
-          run "ln -nfs #{shared_path}/media #{release_path}/beehives/#{beehive}/media"
+          run "mkdir #{release_path}/beehives/klangwolke/media"
+          run "ln -nfs /home/mogulcloud/music #{release_path}/beehives/klangwolke/media/music"
         end
 
         desc "[internal] Computes uploads directory paths and registers them in Capistrano environment."
