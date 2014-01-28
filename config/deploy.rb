@@ -17,6 +17,7 @@ set :deploy_via,                  :remote_cache
 set :normalize_asset_timestamps,  false
 set :git_enable_submodules,       false
 
+set :shared_children,             %w(public/system tmp/pids)
 
 set :default_environment, {
   'PATH' => "/usr/local/bin:$PATH"
