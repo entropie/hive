@@ -35,9 +35,8 @@ BEEHIVES.each do |beehive|
 
 
     # get configuration variables from beehive
-    bhive = Hive::Beehives.load(:klangwolke)[:klangwolke]
+    bhive = Hive::Beehives.load(beehive)[beehive]
     bhive.assets.read
-
 
     # set roles from config variables
     if not (config_roles = bhive.config.roles).nil?

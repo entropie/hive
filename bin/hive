@@ -36,7 +36,11 @@ command(:create) do |sopts|
     if newbeehive.create!(ENV["DOMAIN"])
       puts "done and valid!"
       puts "make sure to edit #{File.join(newbeehive.path, 'config', 'beehive.rb')}"
+      
     end
+    gi = File.join(File.dirname(File.join(File.dirname(File.expand_path(__FILE__)))), 'script/git_init.rb')
+
+    puts `ruby #{gi} #{beehive}`
   end
 end
 

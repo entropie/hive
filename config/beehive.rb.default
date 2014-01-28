@@ -30,6 +30,12 @@ setup do |c|
 
   c.domain      = "%%%domain%%%"
 
+  c.roles = {
+    :web       => "mc",
+    :app       => "mc",
+    :db        => "mc"
+  }
+
   c.css         = [
                    [:screen, "bootstrap.min.css"],
                    [:screen, "bootstrap-theme.min.css"],
