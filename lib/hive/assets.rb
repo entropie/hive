@@ -64,6 +64,7 @@ module Hive
       attr_accessor :facebook
       attr_accessor :roles
       attr_accessor :domain
+      attr_accessor :twitter
       attr_reader   :beehive
 
       def initialize(beehive)

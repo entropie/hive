@@ -29,3 +29,4 @@ gem "koala"
 gem "carrierwave"
 gem 'carrierwave-sequel', :require => 'carrierwave/sequel'
 gem "calendar_helper"
+gem "twitter"
