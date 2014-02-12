@@ -200,7 +200,7 @@ module Hive
     end
 
     def production?
-      mode == :production
+      mode == :production || mode == :live
     end
 
     def development?
