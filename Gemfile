@@ -2,8 +2,9 @@
 
 source :rubygems
 
+
 gem "activesupport", "=3.2.17"
-gem "unicorn"
+gem "unicorn", "=4.8.0"
 gem "rack", ">=1.5.2"
 gem "json"
 gem "haml", "=3.1.7"
