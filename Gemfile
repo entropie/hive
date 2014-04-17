@@ -3,12 +3,13 @@
 source :rubygems
 
 
-gem "activesupport", "=3.2.17"
 gem "unicorn", "=4.8.0"
 gem "rack", ">=1.5.2"
 gem "json"
 gem "haml", "=3.1.7"
 gem "sass", "=3.2.6"
+gem "activesupport", "=3.2.14"
+gem "mime-types", "=1.25.1"
 gem "pg"
 gem "sequel", "=3.44.0"
 gem 'ramaze'
