@@ -2,6 +2,7 @@
 
 source :rubygems
 
+gem "activesupport", "=3.2.17"
 gem "unicorn"
 gem "rack", ">=1.5.2"
 gem "json"

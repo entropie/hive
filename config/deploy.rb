@@ -95,7 +95,6 @@ BEEHIVES.each do |beehive|
       end
     end
 
-
     if beehive == :klangwolke
       #
       # UPLOADS
@@ -125,6 +124,16 @@ BEEHIVES.each do |beehive|
       end
     end
 
+  end
+
+  task :tunnel do
+    public_host_username = 'mit'
+    public_host = "mc"
+    public_port = 9001
+    local_port = public_port
+
+    puts "Starting tunnel #{public_host}:#{public_port} to 0.0.0.0:#{local_port}"
+    exec "ssh -nNT -g -R *:#{public_port}:0.0.0.0:#{local_port} #{public_host_username}@#{public_host}"
   end
 end
 
