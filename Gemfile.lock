@@ -80,7 +80,6 @@ GEM
       innate (>= 2012.12)
       rake
     rdiscount (2.1.7.1)
-    rmagick (2.13.2)
     sass (3.2.6)
     sequel (3.44.0)
     simple_oauth (0.2.0)
@@ -132,7 +131,6 @@ DEPENDENCIES
   rack (>= 1.5.2)
   ramaze
   rdiscount
-  rmagick (= 2.13.2)
   sass (= 3.2.6)
   sequel (= 3.44.0)
   subcommand
