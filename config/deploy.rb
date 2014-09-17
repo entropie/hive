@@ -43,6 +43,9 @@ BEEHIVES.each do |beehive|
     set :beehive_scm_source,    "/home/mit/Source/beehives/#{beehive}"
     set :beehive_path,          File.join(current_path, "beehives", beehive.to_s)
 
+    set :local_backup_path,     "/mnt/backup"
+
+    set :backup_command,        "rsync --progress -auz -L -e ssh mc:#{current_path}/beehives/#{beehive}/media #{local_backup_path}/#{beehive}"
 
     # get configuration variables from beehive
     bhive = Hive::Beehives.load(beehive)[beehive]
@@ -58,18 +61,36 @@ BEEHIVES.each do |beehive|
 
     namespace :backup do
 
+      before "backup", "backup:mount_backup"
       task :default do
         transaction do
-          backup
+          backup_sql if bhive.config.database
+          backup_media
         end
       end
+      after "backup", "backup:umount_backup"
 
-      task :backup do
-        if remote_file_exists?("#{current_path}/beehives/klangwolke/media")
-          run "ls -a #{current_path}/beehives/klangwolke/media/"
-          #puts bhive.media_path
-          local_backup_path = File.expand_path("~/Backup/#{beehive}")
+      task :mount_backup do
+        system("sshfs mit@backup:/home/backup #{local_backup_path}")
+      end
 
+      task :umount_backup do
+        system("sudo umount #{local_backup_path}")
+      end
+
+      task :backup_sql do
+        remote_file = "#{current_path}/beehives/#{beehive}/media/sql-backup"
+        run "mkdir -p #{remote_file}"
+
+        database, username = bhive.config.database[:database], bhive.config.database[:user]
+        run "sudo -u postgres pg_dump --username=#{username} #{database} > #{remote_file}/#{Time.now.strftime("%Y-%m-%d")}.sql"
+      end
+
+      task :backup_media do
+        remote_file = "#{current_path}/beehives/#{beehive}/media"
+        if remote_file_exists?(remote_file)
+          puts backup_command
+          system backup_command
         else
           $stderr.puts "no media directory to backup. skipping."
         end
