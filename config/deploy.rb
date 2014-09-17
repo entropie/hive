@@ -24,12 +24,21 @@ set :default_environment, {
 }
 
 
+def remote_file_exists?(path)
+  results = []
+
+  invoke_command("if [ -e '#{path}' ]; then echo -n 'true'; fi") do |ch, stream, out|
+    results << (out == 'true')
+  end
+
+  results.all?
+end
+
 BEEHIVES.each do |beehive|
   beehive = File.basename(beehive).to_sym
 
   next if beehive == :test
   task beehive do
-
     set :deploy_to,             "/u/apps/#{beehive}"
     set :beehive_scm_source,    "/home/mit/Source/beehives/#{beehive}"
     set :beehive_path,          File.join(current_path, "beehives", beehive.to_s)
@@ -44,6 +53,28 @@ BEEHIVES.each do |beehive|
       [:web, :app, :db].each do |r|
         role r, config_roles[r]
       end
+    end
+
+
+    namespace :backup do
+
+      task :default do
+        transaction do
+          backup
+        end
+      end
+
+      task :backup do
+        if remote_file_exists?("#{current_path}/beehives/klangwolke/media")
+          run "ls -a #{current_path}/beehives/klangwolke/media/"
+          #puts bhive.media_path
+          local_backup_path = File.expand_path("~/Backup/#{beehive}")
+
+        else
+          $stderr.puts "no media directory to backup. skipping."
+        end
+      end
+
     end
 
     namespace :deploy do

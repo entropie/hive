@@ -3,7 +3,9 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-require "lib/hive.rb"
+p Dir.pwd
+
+load "lib/hive.rb"
 
 include Hive
 

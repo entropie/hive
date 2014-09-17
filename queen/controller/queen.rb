@@ -23,7 +23,11 @@ class QueenController < Ramaze::Controller
   include       Queen
   extend        Queen
 
-  engine        :Haml #config.engine
+  engine        :Haml
+  # trait         :haml_options => {
+  #   :encoding  => "utf-8"
+  # }
+
   layout(config.layout) { !request.xhr? }
 
   helper        :user

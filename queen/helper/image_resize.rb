@@ -3,7 +3,6 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-
 module Hive
   module Helper
     module ImageResize
