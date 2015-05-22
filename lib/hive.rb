@@ -16,6 +16,20 @@ require "ostruct"
 Encoding.default_internal = 'utf-8'
 Encoding.default_external = 'utf-8'
 
+
+module Haml
+  module Filters
+    module RedCloth
+      include Base
+
+      def render(text)
+        ::RedCloth.new(text).to_html
+      end
+    end
+  end
+end
+
+    
 def debug(str = "")
   puts "#{str.empty? ? "  " : "->" } #{str}" #if $DEBUG
 end

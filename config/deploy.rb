@@ -58,24 +58,23 @@ BEEHIVES.each do |beehive|
       end
     end
 
-
     namespace :backup do
 
       before "backup", "backup:mount_backup"
       task :default do
         transaction do
-          backup_sql if bhive.config.database
+          backup_sql if bhive.config.database  # check wheater we use a db or not
           backup_media
         end
       end
       after "backup", "backup:umount_backup"
 
       task :mount_backup do
-        system("sshfs mit@backup:/home/backup #{local_backup_path}")
+        #system("sshfs mit@backup:/home/backup #{local_backup_path}")
       end
 
       task :umount_backup do
-        system("sudo umount #{local_backup_path}")
+        #system("sudo umount #{local_backup_path}")
       end
 
       task :backup_sql do
