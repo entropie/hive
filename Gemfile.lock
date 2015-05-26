@@ -48,7 +48,7 @@ GEM
     http (0.6.4)
       http_parser.rb (~> 0.6.0)
     http_parser.rb (0.6.0)
-    i18n (0.7.0)
+    i18n (0.6.9)
     innate (2013.02.21)
       rack (~> 1.5.2)
     json (1.8.2)
@@ -134,6 +134,7 @@ DEPENDENCIES
   faker
   feedjira
   haml
+  i18n (= 0.6.9)
   json
   koala
   mime-types (= 1.25.1)
