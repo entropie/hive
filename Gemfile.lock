@@ -44,7 +44,7 @@ GEM
     gem_plugin (0.2.3)
     haml (4.0.6)
       tilt
-    highline (1.7.2)
+    highline (1.6.21)
     http (0.6.4)
       http_parser.rb (~> 0.6.0)
     http_parser.rb (0.6.0)
@@ -134,6 +134,7 @@ DEPENDENCIES
   faker
   feedjira
   haml
+  highline (= 1.6.21)
   i18n (= 0.6.9)
   json
   koala
