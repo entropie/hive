@@ -5,17 +5,6 @@
 
 
 # FIXME: stub for now
-class User
-  USERS = {
-    'entropie'    =>  Digest::SHA1.hexdigest('test'),
-    "mike"        =>  Digest::SHA1.hexdigest('test'),
-  }
-
-  def self.authenticate(h)
-    USERS[h["username"]] == h["password"] and h["username"]
-  end
-end
-
 class QueenController < Ramaze::Controller
 
   include       Hive

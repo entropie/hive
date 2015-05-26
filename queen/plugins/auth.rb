@@ -15,7 +15,6 @@ class PluginAuthController < QueenController
       request[:password] = Digest::SHA1.hexdigest(request[:password])
       user_login(request.subset(:username, :password))
     end
-  rescue
   end
 
   def register

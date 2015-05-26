@@ -59,7 +59,6 @@ module Hive
 
   QUEEN_LIBRARIES.each do |base_lib|
     lib_dir = Source.join(base_lib)
-    #puts "$: << #{lib_dir}"
     $: << lib_dir unless $:.include?(lib_dir)
   end
 
