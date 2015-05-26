@@ -29,7 +29,6 @@ gem "tlsmail"
 gem "execjs", "=2.0.2"
 gem "uglifier"
 gem "rdiscount"
-#gem "system_timer"
 gem "koala"
 gem "carrierwave"
 gem 'carrierwave-sequel', :require => 'carrierwave/sequel'
