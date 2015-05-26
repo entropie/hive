@@ -134,6 +134,7 @@ DEPENDENCIES
   faker
   feedjira
   haml
+  highline
   i18n (= 0.6.9)
   json
   koala
