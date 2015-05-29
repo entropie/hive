@@ -131,10 +131,15 @@ BEEHIVES.each do |beehive|
       #   run "touch #{File.join(current_path, "beehives", beehive.to_s, "tmp", "restart.txt")}"
       # end
 
+      task :link_media do
+        run "ln -s #{File.join("~", "#{beehive}-media")} #{File.join(beehive_path, "media")}"
+      end
+
       task :default do
         transaction do
           update
           update_beehive
+          link_media
           restart
         end
       end
