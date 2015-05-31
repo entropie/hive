@@ -39,8 +39,7 @@ class PluginMediaController < QueenController
   # end
 
   def resize(*fragments)
-    file = File.join(beehive.media_path("images"), *fragments)
-
+    file = File.join(beehive.media_path(*fragments))
 
     Helper::ImageResize::ImageResizeFacility.new(:path => File.dirname(File.dirname(file))) {
       resize(file)
@@ -50,19 +49,18 @@ class PluginMediaController < QueenController
   end
 
   # FIXME:
-  def self.safe_file(name, tempfile, target_path, rename = true)
+  def self.safe_file(name, tempfile, target_path, rename = true, filename = nil)
     fp = File.open(tempfile.path, 'rb').read
 
     if rename
-      filename = "#{Digest::SHA1.hexdigest(fp)}#{File.extname(name)}"
+      filename ||= "#{Digest::SHA1.hexdigest(fp)}#{File.extname(name)}"
     end
 
     adir = ""
     sdir = File.join(adir, filename.downcase).gsub(/^\//, '')
 
-    FileUtils.mkdir_p(target_path, :verbose => $DEBUG)
-    FileUtils.cp(tempfile.path, File.join(target_path, sdir), :verbose => $DEBUG)
-
+    FileUtils.mkdir_p(target_path, :verbose => true)
+    FileUtils.cp(tempfile.path, File.join(target_path, sdir), :verbose => true)
     sdir
   end
 

@@ -120,10 +120,14 @@ module Hive
           raise Magick::ImageMagickError, "image is nil" unless image
         end
 
+        def self.image=(img)
+          @image = img
+        end
+
         def filename_for(pol)
           name = File.basename(path.path)
-          dir = File.dirname(path.path) << "/../#{pol}/#{name}"
-          FileUtils.mkdir_p(File.dirname(dir))
+          dir = File.join(File.dirname(path.path), "#{pol}/#{name}")
+          FileUtils.mkdir_p(File.dirname(dir), :verbose => true)
           dir
         end
 
