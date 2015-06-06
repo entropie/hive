@@ -1,9 +1,3 @@
-GIT
-  remote: git@github.com:entropie/time-ago-in-words.git
-  revision: fbbbfe15b2333d20e72b7272076f4aa446b22950
-  specs:
-    time-ago-in-words (0.0.5)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -158,7 +152,6 @@ DEPENDENCIES
   sequel (= 3.44.0)
   subcommand
   term-ansicolor (= 1.0.7)
-  time-ago-in-words!
   tlsmail
   twitter
   uglifier

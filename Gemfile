@@ -38,5 +38,4 @@ gem "calendar_helper"
 gem "twitter"
 gem "feedjira"
 gem "redcarpet"
-gem 'time-ago-in-words', :git => 'git@github.com:entropie/time-ago-in-words.git'
 
