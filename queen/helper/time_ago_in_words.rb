@@ -44,7 +44,7 @@ class Time
   end
 
   def time_ago_in_words
-    time_difference = Time.now.to_i - self.to_i
+    time_difference = Time.now.to_i+1 - self.to_i
     unit = get_unit(time_difference)
     unit_difference = time_difference / Units.const_get(unit.capitalize)
 
