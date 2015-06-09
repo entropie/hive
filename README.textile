@@ -2,6 +2,7 @@ h1. Hive
 
 h2. About
 
+
 Hive is a small framework for multiple "ramaze":https://github.com/ramaze/ramaze apps. While ramaze is already a nice 
 framework for developing and serving web-applications, I found I needed a quicker way for creating and managing 
 multiple Applications.
