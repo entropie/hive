@@ -38,11 +38,16 @@ GEM
       multipart-post (>= 1.2, < 3)
     faraday_middleware (0.9.1)
       faraday (>= 0.7.4, < 0.10)
+    fast_stack (0.1.0)
+      rake
+      rake-compiler
     feedjira (2.0.0)
       faraday (~> 0.9)
       faraday_middleware (~> 0.9)
       loofah (~> 2.0)
       sax-machine (~> 1.0)
+    flamegraph (0.1.0)
+      fast_stack
     gem_plugin (0.2.3)
     haml (4.0.6)
       tilt
@@ -68,7 +73,7 @@ GEM
     mongrel (1.2.0.pre2)
       daemons (~> 1.0.10)
       gem_plugin (~> 0.2.3)
-    multi_json (1.11.0)
+    multi_json (1.11.1)
     multipart-post (2.0.0)
     naught (1.0.0)
     net-scp (1.2.1)
@@ -83,13 +88,17 @@ GEM
     open4 (1.3.4)
     pg (0.18.2)
     rack (1.5.3)
+    rack-mini-profiler (0.9.3)
+      rack (>= 1.1.3)
     raindrops (0.13.0)
     rake (10.4.2)
+    rake-compiler (0.9.5)
+      rake
     ramaze (2012.12.08)
       innate (>= 2012.12)
       rake
     rdiscount (2.1.8)
-    redcarpet (3.3.0)
+    redcarpet (3.3.1)
     rmagick (2.15.2)
     sass (3.4.14)
     sax-machine (1.3.2)
@@ -136,6 +145,7 @@ DEPENDENCIES
   execjs (= 2.0.2)
   faker
   feedjira
+  flamegraph
   haml
   highline
   i18n (= 0.6.9)
@@ -143,8 +153,10 @@ DEPENDENCIES
   koala
   mime-types (= 1.25.1)
   mongrel (>= 1.2.0.pre2)
+  nokogiri
   pg
   rack (>= 1.5.2)
+  rack-mini-profiler
   ramaze
   rdiscount
   redcarpet

@@ -39,3 +39,6 @@ gem "twitter"
 gem "feedjira"
 gem "redcarpet"
 gem "truncate_html"
+gem "rack-mini-profiler", :require => false
+gem "flamegraph"
+gem "nokogiri"

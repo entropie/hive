@@ -371,6 +371,20 @@ module Hive
       set_enviroment
       delete_generated_files
 
+
+      Rack::MiniProfiler.config.start_hidden = true
+      Ramaze.middleware :dev do
+        use Rack::Lint
+        use Rack::CommonLogger, Ramaze::Log
+        use Rack::ShowExceptions
+        use Rack::Head
+        #use Rack::RouteExceptions
+        use Rack::Deflater
+        #use Rack::MiniProfiler
+        use Rack::ShowStatus
+        run Ramaze.core
+      end
+
       @mode = :test
       debug; debug;
       debug white { "starting #{identifier} in +++#{mode}+++"}
