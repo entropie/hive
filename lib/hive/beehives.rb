@@ -240,11 +240,11 @@ module Hive
     def stylesheets_for_app
       if mode == :live
         BeehiveAssets.make_static_css unless File.exist?(app_root("public/css/app.css"))
-        "<link rel='stylesheet' rel='screen' type='text/css' href='/css/app.css?#{static_url_apendix}' />"
+        "<link rel='stylesheet' type='text/css' href='/css/app.css' />"
       else
         config.css.map{ |ss|
           csspath = if ss.last[0..0] == "/" then ss.last else "/css/#{ ss.last }" end
-          "<link rel='stylesheet' rel='#{ss.first}' type='text/css' href='#{ csspath }?#{static_url_apendix}' />"
+          "<link rel='stylesheet' type='text/css' href='#{ csspath }?#{static_url_apendix}' />"
         }.join("\n")
       end
     end
@@ -254,7 +254,7 @@ module Hive
         unless File.exist?(app_root("public/js/app.js"))
           BeehiveAssets.make_static_js
         end
-        "<script type='text/javascript' src='/js/app.js?#{static_url_apendix}'></script>"
+        "<script type='text/javascript' src='/js/app.js'></script>"
       else
         config.js.map{ |js| "<script type='text/javascript' src='/js/#{ js }?#{static_url_apendix}'></script>" }.join("\n")
       end
