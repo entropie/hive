@@ -260,8 +260,8 @@ module Hive
       end
     end
 
-    def view_path
-      @view_path ||= File.join(path, "beehive", "view")
+    def view_path(*args)
+      @view_path ||= File.join(path, "beehive", "view", *args)
     end
 
     def app_root(*args)
