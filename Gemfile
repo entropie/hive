@@ -43,3 +43,4 @@ gem "rack-mini-profiler", :require => false
 gem "flamegraph"
 gem "nokogiri"
 gem "flickraw"
+gem "rack-mini-profiler"
