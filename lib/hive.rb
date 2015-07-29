@@ -13,7 +13,7 @@ require "find"
 require "pp"
 require "ostruct"
 
-require "rack-mini-profiler"
+#require "rack-mini-profiler"
 
 Encoding.default_internal = 'utf-8'
 Encoding.default_external = 'utf-8'
