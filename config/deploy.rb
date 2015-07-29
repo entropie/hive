@@ -39,6 +39,7 @@ BEEHIVES.each do |beehive|
 
   next if beehive == :test
   task beehive do
+
     set :deploy_to,             "/u/apps/#{beehive}"
     set :beehive_scm_source,    "/home/mit/Source/beehives/#{beehive}"
     set :beehive_path,          File.join(current_path, "beehives", beehive.to_s)
@@ -58,6 +59,18 @@ BEEHIVES.each do |beehive|
       end
     end
 
+    if beehive == :annas
+      namespace :remote do
+        desc "foo"
+        task :sync do
+          FileUtils.rm_rf(bhive.media_path, :verbose => true)
+          str = "rsync --iconv=UTF-8,CP1252 -avze ssh mc:~/annas-media/ #{bhive.media_path}"
+          system(str)
+        end
+      end
+    end
+
+    
     namespace :backup do
 
       before "backup", "backup:mount_backup"

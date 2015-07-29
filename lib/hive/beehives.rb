@@ -244,7 +244,7 @@ module Hive
       else
         config.css.map{ |ss|
           csspath = if ss.last[0..0] == "/" then ss.last else "/css/#{ ss.last }" end
-          "<link rel='stylesheet' type='text/css' href='#{ csspath }?#{static_url_apendix}' />"
+          "<link rel='stylesheet' type='text/css' href='#{ csspath }' />"
         }.join("\n")
       end
     end
