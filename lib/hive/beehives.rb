@@ -256,7 +256,10 @@ module Hive
         end
         "<script type='text/javascript' src='/js/app.js'></script>"
       else
-        config.js.map{ |js| "<script type='text/javascript' src='/js/#{ js }?#{static_url_apendix}'></script>" }.join("\n")
+        
+        config.js.map{ |js|
+          prfx = js =~ /^\// ? "" : "/js/"
+          "<script type='text/javascript' src='#{prfx}/#{ js }?#{static_url_apendix}'></script>" }.join("\n")
       end
     end
 
