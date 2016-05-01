@@ -164,6 +164,17 @@ BEEHIVES.each do |beehive|
       end
     end
 
+    if beehive == :annas
+      namespace :sync do
+        desc "Sync MEDIA"
+        task :default do
+          cd_to = "cd #{File.join(beehive_path, "media")} && "
+          run "#{cd_to} git commit -am 'sync'; true"
+          system "cd ~/annas-media && git pull"
+        end
+      end
+    end
+
     if beehive == :klangwolke
       #
       # UPLOADS
