@@ -18,6 +18,9 @@ CMD="cd $APP_ROOT; bundle exec unicorn -D -c $APP_ROOT/config/unicorn.rb -E prod
 AS_USER=mit
 set -u
 
+mkdir -p "/var/run/unicorn"
+chown mit:users "/var/run/unicorn"
+
 OLD_PIN="$PID.oldbin"
 
 sig () {
