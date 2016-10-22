@@ -13,7 +13,7 @@ BEEHIVES = Dir.glob("beehives/*").map { |b| File.basename(b) }
 
 requested_beehive = ARGV.first
 
-set :deploy_via,                  :remote_cache
+set :deploy_via,                  :checkout
 set :normalize_asset_timestamps,  false
 set :git_enable_submodules,       false
 
@@ -41,7 +41,7 @@ BEEHIVES.each do |beehive|
   task beehive do
 
     set :deploy_to,             "/u/apps/#{beehive}"
-    set :beehive_scm_source,    "/home/mit/Source/beehives/#{beehive}"
+    set :beehive_scm_source,    "/home/mit/Source/#{beehive}"
     set :beehive_path,          File.join(current_path, "beehives", beehive.to_s)
 
     set :local_backup_path,     "/mnt/backup"
@@ -153,7 +153,7 @@ BEEHIVES.each do |beehive|
           update
           update_beehive
           link_media
-          restart
+          #restart
         end
       end
 

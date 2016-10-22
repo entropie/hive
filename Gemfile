@@ -39,8 +39,8 @@ gem "twitter"
 gem "feedjira"
 gem "redcarpet"
 gem "truncate_html"
-gem "rack-mini-profiler", :require => false
+gem "rack-mini-profiler" #, :require => false
 gem "flamegraph"
 gem "nokogiri"
 gem "flickraw"
-gem "rack-mini-profiler"
+gem "stackprof"
