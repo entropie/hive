@@ -6,8 +6,7 @@ source :rubygems
 
 #gem "sshkit", "=1.3.0"
 gem "unicorn", "=4.8.0"
-#gem "rack", ">=1.5.2"
-gem "rack", "=1.4.2"
+gem "rack"
 gem "json"
 gem "haml"
 gem "sass"
@@ -40,7 +39,7 @@ gem "twitter"
 gem "feedjira"
 gem "redcarpet"
 gem "truncate_html"
-gem "rack-mini-profiler" #, :require => false
+#gem "rack-mini-profiler" #, :require => false
 gem "flamegraph"
 gem "nokogiri"
 gem "flickraw"
