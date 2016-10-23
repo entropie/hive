@@ -102,7 +102,7 @@ module Ramaze
         #   </div>
 
 
-        def navigation(limit = 8)
+        def navigation(limit = 2)
           g = Ramaze::Gestalt.new
           g.div :class => :pager do
             if first_page?
@@ -134,6 +134,48 @@ module Ramaze
 
               link(g, next_page, '>', :class => :next)
               link(g, page_count, '>>', :class => :last)
+            end
+          end
+          g.to_s
+        end
+
+
+        def navigation(limit = 8)
+          g = Ramaze::Gestalt.new
+          g.ul :class => :pagination do
+            
+            if first_page?
+              g.li(:class => "disabled") {
+                g.span(:class => 'first grey'){ g.span(:class => "glyphicon glyphicon-fast-backward") } }
+              g.li(:class => "disabled") {
+                g.span(:class => 'previous grey'){ g.span(:class => "glyphicon glyphicon glyphicon-backward") } } 
+            else
+              g.li { link(g, 1, '<span class="glyphicon glyphicon-fast-backward"></span>', :class => "hl first") }
+              g.li { link(g, prev_page, '<span class="glyphicon glyphicon-backward"></span>', :class => "hl previous") }              
+            end
+
+            lower = limit ? (current_page - limit) : 1
+            lower = lower < 1 ? 1 : lower
+
+            (lower...current_page).each do |n|
+              g.li { link(g, n) }
+            end
+
+            g.li(:class => "active disabled") { g.span current_page }
+
+            if last_page?
+              g.li(:class => "disabled") {
+                g.span(:class => 'next grey'){ g.span(:class => "glyphicon glyphicon-fast-forward") } }
+              g.li(:class => "disabled") {
+                g.span(:class => 'next grey'){ g.span(:class => "glyphicon glyphicon-forward") } } 
+            elsif next_page
+              higher = limit ? (next_page + limit) : page_count
+              higher = [higher, page_count].min
+              (next_page..higher).each do |n|
+                g.li { link(g, n) }
+              end
+              g.li { link(g, next_page,  '<span class="glyphicon glyphicon-forward"></span>', :class => "hl next") }
+              g.li { link(g, page_count, '<span class="glyphicon glyphicon-fast-forward"></span>', :class => "hl last") }              
             end
           end
           g.to_s
@@ -177,8 +219,8 @@ module Ramaze
         end
 
         def link(g, n, text = n, hash = {})
-          text = h(text.to_s)
-
+          #text = h(text.to_s
+          text = text.to_s
 
           path = if action.path == "/" or action.path == "/index"
                    "/index/%s/%s" % [@var.to_s, n]
@@ -194,6 +236,7 @@ module Ramaze
           params = request.params
           hash[:href] = action.node.r(path, params)
           g.a(hash){ text }
+          #'<a href="%s">%s</a>' % [action.node.r(path, params), text]
         end    
 
         # Wrapper for Array to behave like the Sequel pagination
