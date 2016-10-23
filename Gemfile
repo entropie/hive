@@ -6,7 +6,8 @@ source :rubygems
 
 #gem "sshkit", "=1.3.0"
 gem "unicorn", "=4.8.0"
-gem "rack", ">=1.5.2"
+#gem "rack", ">=1.5.2"
+gem "rack", "=1.4.2"
 gem "json"
 gem "haml"
 gem "sass"
