@@ -1,5 +1,8 @@
 require "../../lib/hive.rb"
-:< "../../queen/plugins"
+$: << "../../queen/plugins"
+
+require "rack/builder"
+
 identifier = File.expand_path(__FILE__).split("/")[-2].to_sym
 
 Hive::Queen::hives.load( identifier )
