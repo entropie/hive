@@ -28,6 +28,10 @@ def remote_file_exists?(full_path)
   'true' ==  capture("if [ -e #{full_path} ]; then echo 'true'; fi").strip
 end
 
+def is_dev_machine?
+  capture("hostname").strip == "xeno"
+end
+
 BEEHIVES.each do |beehive|
   beehive = File.basename(beehive).to_sym
 
@@ -57,8 +61,32 @@ BEEHIVES.each do |beehive|
       end
     end
 
-    namespace :backup do
+    namespace :web do
+      task :start do
+        run "cd %s && bundle exec unicorn -D -c %s -E production" % [current_path, bhive.app_root("../config/unicorn.rb")]
+      end
 
+      before "web:restart", "web:stop"
+      task :restart do
+      end
+      after 'web:restart', 'web:start'
+
+      task :stop do
+        pidfile = "home/unicorn/#{beehive}.pid"
+        if remote_file_exists?(pidfile)
+          pid = capture("cat ").strip
+          run "kill #{pid}"
+        end
+      end
+
+      before 'web:reset', "web:stop"
+      task :reset do
+        run "sudo killall nginx; sudo nginx"
+      end
+      after 'web:reset', "web:start"
+    end
+
+    namespace :backup do
       task :default do
         transaction do
           backup_sql if bhive.config.database  # check wheater we use a db or not
@@ -81,35 +109,6 @@ BEEHIVES.each do |beehive|
         end
       end
 
-      # task :backup_sql do
-      #   remote_file = "#{current_path}/beehives/#{beehive}/media/sql-backup"
-      #   run "mkdir -p #{remote_file}"
-
-      #   database, username = bhive.config.database[:database], bhive.config.database[:user]
-      #   run "sudo -u postgres pg_dump --username=#{username} #{database} > #{remote_file}/#{Time.now.strftime("%Y-%m-%d")}.sql"
-      # end
-
-      # task :backup_media do
-      #   remote_file = "#{current_path}/beehives/#{beehive}/media"
-      #   if remote_file_exists?(remote_file)
-      #     puts backup_command
-      #     system backup_command
-      #   else
-      #     $stderr.puts "no media directory to backup. skipping."
-      #   end
-      # end
-      #
-      # task :mount_backup do
-      #   system("sshfs mit@backup:/home/backup #{local_backup_path}")
-      # end
-      #
-      # task :umount_backup do
-      #   system("sudo umount #{local_backup_path}")
-      # end
-      # 
-      # before "backup", "backup:mount_backup"
-      # after "backup", "backup:umount_backup"
-
     end
 
     namespace :deploy do
@@ -123,83 +122,60 @@ BEEHIVES.each do |beehive|
       end
 
       task :setup_config, :roles => :app do
-        sudo "ln -nfs #{current_path}/beehives/#{beehive}/config/nginx.conf      /etc/nginx/sites-enabled/#{beehive}.conf"
+        conf = "#{beehive}.conf"
+        nginx_conf = "nginx.conf"
+        hn = capture("hostname").strip
+
+        if !is_dev_machine?
+          conf, nginx_conf = "#{beehive}-#{hn}.conf", "nginx-#{hn}.conf"
+        end
+        
+        sudo "ln -nfs #{current_path}/beehives/#{beehive}/config/#{nginx_conf}   /etc/nginx/sites-enabled/#{conf}"
         sudo "ln -nfs #{current_path}/beehives/#{beehive}/config/unicorn_init.sh /etc/init.d/unicorn_#{beehive}"
       end
 
       task :link_media, :roles => :app do
         run "ln -s %s %s" % [bhive.media_path, beehive_source_media_path]
       end
-
       after "deploy:setup", "deploy:setup_config"
-      after "deploy:setup", "deploy:link_media"
+      
 
       task :update_beehive do
         run "rm -rf #{beehive_path}" # rm submodule path
         run "cd #{File.dirname(beehive_path)} && git clone #{beehive_scm_source} #{beehive}"
         run "cd #{beehive_path} && git pull origin master"
+        run "cd #{current_path} && bundle install"
       end
+      after "deploy:update_beehive", "deploy:link_media"
 
-      # task :restart do
-      #   run "touch #{File.join(current_path, "beehives", beehive.to_s, "tmp", "restart.txt")}"
-      # end
       task :link_media do
         live_media_path = File.join(beehive_path, "media")
         unless remote_file_exists?(live_media_path)
-          "ln -s #{beehive_source_media_path} #{live_media_path}"
+          run "ln -s #{beehive_source_media_path} #{live_media_path}"
         end
       end
-
-      # task :update do
-      #   puts beehive_path
-      # end
 
       task :default do
         transaction do
           update
           update_beehive
           link_media
-          #restart
         end
       end
+      after 'deploy', 'web:reset' 
 
       task :setup do
-        puts capture("if [ ! -d /u ]; then sudo mkdir /u && sudo #{chown_cmd} /u; else echo 2;fi")
+        %w'/u /home/unicorn'.each do |lpath|
+          run "if [ ! -d %s ]; then sudo mkdir %s && sudo #{chown_cmd} %s; else echo;fi" % [lpath, lpath, lpath]
+        end
+
         dirs = [deploy_to, releases_path, shared_path]
+
         run "mkdir -p #{dirs.join(' ')}"
         run "chmod g+w #{dirs.join(' ')}" if fetch(:group_writable, true)
         run "chown mit:users #{dirs.join(' ')}"
       end
     end
-
-    # if beehive == :klangwolke
-    #   #
-    #   # UPLOADS
-    #   #
-    #   namespace :uploads do
-    #     desc "Creates the upload folders unless they exist and sets the proper upload permissions."
-    #     task :setup, :except => { :no_release => true } do
-    #       dirs = uploads_dirs.map { |d| File.join(shared_path, d) }
-    #       run "mkdir -p #{dirs.join(' ')} && chmod g+w #{dirs.join(' ')}"
-    #     end
-
-    #     desc "[internal] Creates the symlink to uploads shared folder for the most recently deployed version."
-    #     task :symlink, :except => { :no_release => true } do
-    #       run "rm -rf #{release_path}/beehives/klangwolke/media"
-    #       run "mkdir #{release_path}/beehives/klangwolke/media"
-    #       run "ln -nfs /home/mogulcloud/music #{release_path}/beehives/klangwolke/media/music"
-    #     end
-
-    #     desc "[internal] Computes uploads directory paths and registers them in Capistrano environment."
-    #     task :register_dirs do
-    #       set :uploads_dirs,    %w(media)
-    #       set :shared_children, fetch(:shared_children) + fetch(:uploads_dirs)
-    #     end
-
-    #     after       "deploy:update_beehive", "uploads:symlink"
-    #     on :start,  "uploads:register_dirs"
-    #   end
-    # end
 
   end
 
