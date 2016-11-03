@@ -63,7 +63,7 @@ BEEHIVES.each do |beehive|
 
     namespace :web do
       task :start do
-        run "cd %s && bundle exec unicorn -D -c %s -E production" % [current_path, bhive.app_root("../config/unicorn.rb")]
+        run "cd %s && bundle exec unicorn -D -c %s -E production" % [current_path, bhive.app_root("/config/unicorn.rb")]
       end
 
       before "web:restart", "web:stop"
