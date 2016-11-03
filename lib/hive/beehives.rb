@@ -380,7 +380,6 @@ module Hive
         use Rack::ShowExceptions
         use Rack::Head
         use Rack::Deflater
-        use Rack::MiniProfiler
         use Rack::ShowStatus
         run Ramaze.core
       end
