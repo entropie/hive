@@ -24,14 +24,8 @@ set :default_environment, {
 }
 
 
-def remote_file_exists?(path)
-  results = []
-
-  invoke_command("if [ -e '#{path}' ]; then echo -n 'true'; fi") do |ch, stream, out|
-    results << (out == 'true')
-  end
-
-  results.all?
+def remote_file_exists?(full_path)
+  'true' ==  capture("if [ -e #{full_path} ]; then echo 'true'; fi").strip
 end
 
 BEEHIVES.each do |beehive|
@@ -48,6 +42,10 @@ BEEHIVES.each do |beehive|
 
     set :backup_command,        "rsync --progress -auz -L -e ssh mc:#{current_path}/beehives/#{beehive}/media #{local_backup_path}/#{beehive}"
 
+    set :beehive_source_media_path, File.join(File.expand_path("~"), "Data/hive/media/#{beehive}-media")
+
+    set :chown_cmd,             "chown mit:users "
+    
     # get configuration variables from beehive
     bhive = Hive::Beehives.load(beehive)[beehive]
     bhive.assets.read
@@ -59,60 +57,65 @@ BEEHIVES.each do |beehive|
       end
     end
 
-    if beehive == :annas
-      namespace :remote do
-        desc "foo"
-        task :sync do
-          FileUtils.rm_rf(bhive.media_path, :verbose => true)
-          str = "rsync --iconv=UTF-8,CP1252 -avze ssh mc:~/annas-media/ #{bhive.media_path}"
-          system(str)
-        end
-      end
-    end
-
-    
     namespace :backup do
 
-      before "backup", "backup:mount_backup"
       task :default do
         transaction do
           backup_sql if bhive.config.database  # check wheater we use a db or not
           backup_media
         end
       end
-      after "backup", "backup:umount_backup"
 
-      task :mount_backup do
-        #system("sshfs mit@backup:/home/backup #{local_backup_path}")
+      task :clean_remote_media do
+        run "cd %s && git commit -am 'Update from cap backup:clean_remote_media'" % [bhive.media_path]
       end
 
-      task :umount_backup do
-        #system("sudo umount #{local_backup_path}")
+      task :update_local_media do
+        system "echo 'cd %s && git pull'" % beehive_source_media_path
       end
 
-      task :backup_sql do
-        remote_file = "#{current_path}/beehives/#{beehive}/media/sql-backup"
-        run "mkdir -p #{remote_file}"
-
-        database, username = bhive.config.database[:database], bhive.config.database[:user]
-        run "sudo -u postgres pg_dump --username=#{username} #{database} > #{remote_file}/#{Time.now.strftime("%Y-%m-%d")}.sql"
-      end
-
-      task :backup_media do
-        remote_file = "#{current_path}/beehives/#{beehive}/media"
-        if remote_file_exists?(remote_file)
-          puts backup_command
-          system backup_command
-        else
-          $stderr.puts "no media directory to backup. skipping."
+      task :default do
+        transaction do
+          clean_remote_media
+          update_local_media
         end
       end
+
+      # task :backup_sql do
+      #   remote_file = "#{current_path}/beehives/#{beehive}/media/sql-backup"
+      #   run "mkdir -p #{remote_file}"
+
+      #   database, username = bhive.config.database[:database], bhive.config.database[:user]
+      #   run "sudo -u postgres pg_dump --username=#{username} #{database} > #{remote_file}/#{Time.now.strftime("%Y-%m-%d")}.sql"
+      # end
+
+      # task :backup_media do
+      #   remote_file = "#{current_path}/beehives/#{beehive}/media"
+      #   if remote_file_exists?(remote_file)
+      #     puts backup_command
+      #     system backup_command
+      #   else
+      #     $stderr.puts "no media directory to backup. skipping."
+      #   end
+      # end
+      #
+      # task :mount_backup do
+      #   system("sshfs mit@backup:/home/backup #{local_backup_path}")
+      # end
+      #
+      # task :umount_backup do
+      #   system("sudo umount #{local_backup_path}")
+      # end
+      # 
+      # before "backup", "backup:mount_backup"
+      # after "backup", "backup:umount_backup"
 
     end
 
     namespace :deploy do
 
       %w[start stop restart].each do |command|
+
         desc "#{command} unicorn server"
         task command, :roles => :app, :except => { :no_release => true } do
           run "/etc/init.d/unicorn_#{beehive} #{command}"
@@ -123,16 +126,13 @@ BEEHIVES.each do |beehive|
         sudo "ln -nfs #{current_path}/beehives/#{beehive}/config/nginx.conf      /etc/nginx/sites-enabled/#{beehive}.conf"
         sudo "ln -nfs #{current_path}/beehives/#{beehive}/config/unicorn_init.sh /etc/init.d/unicorn_#{beehive}"
       end
-      after "deploy:setup", "deploy:setup_config"
 
-      task :sync_beehive do
-        cd_to = "cd #{beehive_path} && "
-        run "#{cd_to} git branch web"
-        run "#{cd_to} git checkout web"
-        run "#{cd_to} git add ."
-        run "#{cd_to} git commit -am 'update from web'"
-        run "#{cd_to} git push origin web:master"
+      task :link_media, :roles => :app do
+        run "ln -s %s %s" % [bhive.media_path, beehive_source_media_path]
       end
+
+      after "deploy:setup", "deploy:setup_config"
+      after "deploy:setup", "deploy:link_media"
 
       task :update_beehive do
         run "rm -rf #{beehive_path}" # rm submodule path
@@ -143,78 +143,66 @@ BEEHIVES.each do |beehive|
       # task :restart do
       #   run "touch #{File.join(current_path, "beehives", beehive.to_s, "tmp", "restart.txt")}"
       # end
-
       task :link_media do
-        run "ln -s #{File.join("~", "#{beehive}-media")} #{File.join(beehive_path, "media")}"
+        live_media_path = File.join(beehive_path, "media")
+        unless remote_file_exists?(live_media_path)
+          "ln -s #{beehive_source_media_path} #{live_media_path}"
+        end
       end
+
+      # task :update do
+      #   puts beehive_path
+      # end
 
       task :default do
         transaction do
           update
-          update_beehive
-          link_media
+          #update_beehive
+          #link_media
           #restart
         end
       end
 
       task :setup do
+        puts capture("if [ ! -d /u ]; then sudo mkdir /u && sudo #{chown_cmd} /u; else echo 2;fi")
         dirs = [deploy_to, releases_path, shared_path]
         run "mkdir -p #{dirs.join(' ')}"
         run "chmod g+w #{dirs.join(' ')}" if fetch(:group_writable, true)
+        run "chown mit:users #{dirs.join(' ')}"
       end
     end
 
-    if beehive == :annas
-      namespace :sync do
-        desc "Sync MEDIA"
-        task :default do
-          cd_to = "cd #{File.join(beehive_path, "media")} && "
-          run "#{cd_to} git commit -am 'sync'; true"
-          system "cd ~/annas-media && git pull"
-        end
-      end
-    end
+    # if beehive == :klangwolke
+    #   #
+    #   # UPLOADS
+    #   #
+    #   namespace :uploads do
+    #     desc "Creates the upload folders unless they exist and sets the proper upload permissions."
+    #     task :setup, :except => { :no_release => true } do
+    #       dirs = uploads_dirs.map { |d| File.join(shared_path, d) }
+    #       run "mkdir -p #{dirs.join(' ')} && chmod g+w #{dirs.join(' ')}"
+    #     end
 
-    if beehive == :klangwolke
-      #
-      # UPLOADS
-      #
-      namespace :uploads do
-        desc "Creates the upload folders unless they exist and sets the proper upload permissions."
-        task :setup, :except => { :no_release => true } do
-          dirs = uploads_dirs.map { |d| File.join(shared_path, d) }
-          run "mkdir -p #{dirs.join(' ')} && chmod g+w #{dirs.join(' ')}"
-        end
+    #     desc "[internal] Creates the symlink to uploads shared folder for the most recently deployed version."
+    #     task :symlink, :except => { :no_release => true } do
+    #       run "rm -rf #{release_path}/beehives/klangwolke/media"
+    #       run "mkdir #{release_path}/beehives/klangwolke/media"
+    #       run "ln -nfs /home/mogulcloud/music #{release_path}/beehives/klangwolke/media/music"
+    #     end
 
-        desc "[internal] Creates the symlink to uploads shared folder for the most recently deployed version."
-        task :symlink, :except => { :no_release => true } do
-          run "rm -rf #{release_path}/beehives/klangwolke/media"
-          run "mkdir #{release_path}/beehives/klangwolke/media"
-          run "ln -nfs /home/mogulcloud/music #{release_path}/beehives/klangwolke/media/music"
-        end
+    #     desc "[internal] Computes uploads directory paths and registers them in Capistrano environment."
+    #     task :register_dirs do
+    #       set :uploads_dirs,    %w(media)
+    #       set :shared_children, fetch(:shared_children) + fetch(:uploads_dirs)
+    #     end
 
-        desc "[internal] Computes uploads directory paths and registers them in Capistrano environment."
-        task :register_dirs do
-          set :uploads_dirs,    %w(media)
-          set :shared_children, fetch(:shared_children) + fetch(:uploads_dirs)
-        end
-
-        after       "deploy:update_beehive", "uploads:symlink"
-        on :start,  "uploads:register_dirs"
-      end
-    end
+    #     after       "deploy:update_beehive", "uploads:symlink"
+    #     on :start,  "uploads:register_dirs"
+    #   end
+    # end
 
   end
 
-  task :tunnel do
-    public_host_username = 'mit'
-    public_host = "mc"
-    public_port = 9001
-    local_port = public_port
-
-    puts "Starting tunnel #{public_host}:#{public_port} to 0.0.0.0:#{local_port}"
-    exec "ssh -nNT -g -R *:#{public_port}:0.0.0.0:#{local_port} #{public_host_username}@#{public_host}"
-  end
 end
 
 namespace :deploy do
