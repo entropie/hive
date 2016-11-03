@@ -74,7 +74,7 @@ BEEHIVES.each do |beehive|
       task :stop do
         pidfile = "/home/unicorn/#{beehive}.pid"
         if remote_file_exists?(pidfile)
-          pid = capture("cat ").strip
+          pid = capture("cat #{pidfile}").strip
           run "kill #{pid}"
           run "rm %s" % pidfile
         end
