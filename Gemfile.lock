@@ -31,7 +31,7 @@ GEM
       sequel
     daemons (1.0.10)
     dalli (2.7.6)
-    domain_name (0.5.20160826)
+    domain_name (0.5.20161021)
       unf (>= 0.0.5, < 1.0.0)
     equalizer (0.0.10)
     execjs (2.0.2)
@@ -46,7 +46,6 @@ GEM
       faraday_middleware (~> 0.9)
       loofah (~> 2.0)
       sax-machine (~> 1.0)
-    flamegraph (0.9.5)
     flickraw (0.9.9)
     gem_plugin (0.2.3)
     haml (4.0.7)
@@ -109,7 +108,6 @@ GEM
     sax-machine (1.3.2)
     sequel (3.44.0)
     simple_oauth (0.3.1)
-    stackprof (0.2.10)
     subcommand (1.0.6)
     term-ansicolor (1.0.7)
     thread_safe (0.3.5)
@@ -127,7 +125,7 @@ GEM
       memoizable (~> 0.4.0)
       naught (~> 1.0)
       simple_oauth (~> 0.3.0)
-    uglifier (3.0.2)
+    uglifier (3.0.3)
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
@@ -153,7 +151,6 @@ DEPENDENCIES
   execjs (= 2.0.2)
   faker
   feedjira
-  flamegraph
   flickraw
   haml
   highline
@@ -172,7 +169,6 @@ DEPENDENCIES
   rmagick
   sass
   sequel (= 3.44.0)
-  stackprof
   subcommand
   term-ansicolor (= 1.0.7)
   tlsmail
