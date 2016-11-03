@@ -72,7 +72,7 @@ BEEHIVES.each do |beehive|
       after 'web:restart', 'web:start'
 
       task :stop do
-        pidfile = "home/unicorn/#{beehive}.pid"
+        pidfile = "/home/unicorn/#{beehive}.pid"
         if remote_file_exists?(pidfile)
           pid = capture("cat ").strip
           run "kill #{pid}"
