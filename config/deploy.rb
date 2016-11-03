@@ -35,7 +35,7 @@ BEEHIVES.each do |beehive|
   task beehive do
 
     set :deploy_to,             "/u/apps/#{beehive}"
-    set :beehive_scm_source,    "/home/mit/Source/#{beehive}"
+    set :beehive_scm_source,    "/home/mit/Source/beehives/#{beehive}"
     set :beehive_path,          File.join(current_path, "beehives", beehive.to_s)
 
     set :local_backup_path,     "/mnt/backup"
@@ -157,8 +157,8 @@ BEEHIVES.each do |beehive|
       task :default do
         transaction do
           update
-          #update_beehive
-          #link_media
+          update_beehive
+          link_media
           #restart
         end
       end
