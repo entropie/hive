@@ -76,6 +76,7 @@ BEEHIVES.each do |beehive|
         if remote_file_exists?(pidfile)
           pid = capture("cat ").strip
           run "kill #{pid}"
+          run "rm %s" % pidfile
         end
       end
 
