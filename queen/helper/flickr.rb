@@ -1,5 +1,5 @@
-FlickRaw.api_key       = "072713a5fa2e6188577ceb8a5fd5d5e2"
-FlickRaw.shared_secret = "912d78d95d619df7"
+#FlickRaw.api_key       = "abc"
+#FlickRaw.shared_secret = "def"
 
 module Hive
   module Helper
