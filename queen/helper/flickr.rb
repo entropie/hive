@@ -154,6 +154,15 @@ module Hive
         i.to_html(size)
       end
 
+      def FIS(fid, size = :medium, desc = nil)
+        size = :medium if not size or size.to_s.strip.empty?
+        size = size.to_sym
+        i = Helper::Flickr::Photo.find(fid)
+        i.description = desc if desc
+        sizes = i.sizes(size).source
+      rescue
+        URL("/img/og-image.jpg")
+      end
     end
   end
 end
