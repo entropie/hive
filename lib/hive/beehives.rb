@@ -319,7 +319,7 @@ module Hive
 
     def set_enviroment(options = { })
       Queen.const_set("BEEHIVE", self)
-      Queen.const_set("REV", File.readlines( BEEHIVE.app_root("../.git/refs/heads/master") ).join.strip[0..6] )
+      Queen.const_set("REV", File.readlines( app_root("../.git/refs/heads/master") ).join.strip[0..6] )
 
       # I had wierd problems during developing a very similiar app with
       # memchached and multiple apps running. Sometimes the session was
