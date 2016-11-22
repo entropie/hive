@@ -228,7 +228,7 @@ module Hive
     end
 
     def static_url_apendix
-      Time.now.usec
+      REV
     end
 
     def controller(&blk)
@@ -240,11 +240,11 @@ module Hive
     def stylesheets_for_app
       if mode == :live
         BeehiveAssets.make_static_css unless File.exist?(app_root("public/css/app.css"))
-        "<link rel='stylesheet' type='text/css' href='/css/app.css' />"
+        "<link rel='stylesheet' type='text/css' href='/css/app.css?#{static_url_apendix}' />"
       else
         config.css.map{ |ss|
           csspath = if ss.last[0..0] == "/" then ss.last else "/css/#{ ss.last }" end
-          "<link rel='stylesheet' type='text/css' href='#{ csspath }' />"
+          "<link rel='stylesheet' type='text/css' href='#{ csspath }?#{static_url_apendix}' />"
         }.join("\n")
       end
     end
@@ -254,7 +254,7 @@ module Hive
         unless File.exist?(app_root("public/js/app.js"))
           BeehiveAssets.make_static_js
         end
-        "<script type='text/javascript' src='/js/app.js'></script>"
+        "<script type='text/javascript' src='/js/app.js?#{static_url_apendix}'></script>"
       else
         
         config.js.map{ |js|
@@ -319,6 +319,7 @@ module Hive
 
     def set_enviroment(options = { })
       Queen.const_set("BEEHIVE", self)
+      Queen.const_set("REV", File.readlines( BEEHIVE.app_root("../.git/refs/heads/master") ).join.strip[0..6] )
 
       # I had wierd problems during developing a very similiar app with
       # memchached and multiple apps running. Sometimes the session was
