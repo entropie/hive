@@ -220,7 +220,7 @@ module Hive
     end
 
     def queen
-      Queen
+      Queen.const_get("REV")
     end
 
     def config
