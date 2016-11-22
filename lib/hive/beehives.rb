@@ -228,7 +228,11 @@ module Hive
     end
 
     def static_url_apendix
-      REV
+      rev
+    end
+
+    def rev
+      @rev ||= File.readlines(app_root("../.git/refs/heads/master")).join[0..6]
     end
 
     def controller(&blk)
@@ -319,8 +323,6 @@ module Hive
 
     def set_enviroment(options = { })
       Queen.const_set("BEEHIVE", self)
-
-      Queen.const_set("REV", File.readlines(self.app_root("../.git/refs/heads/master")).join[0..6])
       
       # I had wierd problems during developing a very similiar app with
       # memchached and multiple apps running. Sometimes the session was
