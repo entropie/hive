@@ -263,7 +263,8 @@ module Hive
         
         config.js.map{ |js|
           prfx = js =~ /^\// ? "" : "/js/"
-          "<script type='text/javascript' src='#{prfx}/#{ js }?#{static_url_apendix}'></script>" }.join("\n")
+          add = js =~ /application/ ? "data-turbolinks-eval=\"false\"" : ""
+          "<script #{add} type='text/javascript' src='#{prfx}/#{ js }?#{static_url_apendix}'></script>" }.join("\n")
       end
     end
 
