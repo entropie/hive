@@ -112,7 +112,7 @@ GEM
     rdiscount (2.2.0.1)
     redcarpet (3.4.0)
     rmagick (2.16.0)
-    sass (3.5.2)
+    sass (3.5.3)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
@@ -189,4 +189,4 @@ DEPENDENCIES
   unicorn (= 4.8.0)
 
 BUNDLED WITH
-   1.13.6
+   1.10.0
