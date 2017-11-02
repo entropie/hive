@@ -135,9 +135,9 @@ BEEHIVES.each do |beehive|
         sudo "ln -nfs #{current_path}/beehives/#{beehive}/config/unicorn_init.sh /etc/init.d/unicorn_#{beehive}"
       end
 
-      task :link_media, :roles => :app do
-        run "ln -s %s %s" % [bhive.media_path, beehive_source_media_path]
-      end
+      # task :link_media, :roles => :app do
+      #   run "ln -s %s %s" % [bhive.media_path, beehive_source_media_path]
+      # end
       after "deploy:setup", "deploy:setup_config"
       
 
