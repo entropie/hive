@@ -4,56 +4,58 @@
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
 
-module FileWriter
-  include FileUtils
-
-  def write_to(file, h = "w+", &blk)
-    debug "writing to #{file}"
-    reload!
-    File.open(file, h, &blk)
-  end
-end
-
-
-module PostAncestors
-  def before(logged_in)
-    gps = group.posts(logged_in)
-    all = posts(logged_in).map(&:post)
-    global_index = all.index(self)
-    if in_group?
-      if (ind = gps.index(self)) > 0
-        return gps[gps.index(self)-1]
-      else
-        return all[global_index-1]
-      end
-    else
-      if pst = all[global_index-1]
-        return pst
-      end
-    end
-  end
-
-  def after(logged_in = false)
-    gps = group.posts(logged_in)
-    all = posts(logged_in).map(&:post)
-    all_posts_size = all.size
-    global_index = all.index(self)
-
-    if in_group?
-      if (ind=gps.index(self)) < gps.size-1
-        return gps[ind+1]
-      else
-        return all[global_index+1]
-      end
-    else
-      if pst = all[global_index+1]
-        return pst
-      end
-    end
-  end
-end
-
 module Blogs
+
+  module FileWriter
+    include FileUtils
+
+    def write_to(file, h = "w+", &blk)
+      debug "writing to #{file}"
+      reload!
+      File.open(file, h, &blk)
+    end
+  end
+
+
+  module PostAncestors
+    def before(logged_in)
+      gps = group.posts(logged_in)
+      all = posts(logged_in).map(&:post)
+      global_index = all.index(self)
+      if in_group?
+        if (ind = gps.index(self)) > 0
+          return gps[gps.index(self)-1]
+        else
+          return all[global_index-1]
+        end
+      else
+        if pst = all[global_index-1]
+          return pst
+        end
+      end
+    end
+
+    def after(logged_in = false)
+      gps = group.posts(logged_in)
+      all = posts(logged_in).map(&:post)
+      all_posts_size = all.size
+      global_index = all.index(self)
+
+      if in_group?
+        if (ind=gps.index(self)) < gps.size-1
+          return gps[ind+1]
+        else
+          return all[global_index+1]
+        end
+      else
+        if pst = all[global_index+1]
+          return pst
+        end
+      end
+    end
+  end
+
+
 
   include Helper::Flickr
 
@@ -447,7 +449,7 @@ module Blogs
       src = relative_path
       target = relative_path.gsub(/\/posts\//, "/draft/")
       FileUtils.mv(File.join(Queen::BEEHIVE.media_path(src)),
-        File.join(Queen::BEEHIVE.media_path, target), :verbose => true)
+                   File.join(Queen::BEEHIVE.media_path, target), :verbose => true)
       metadata.filename = target
       metadata.unpublish!
       Database.reload!
@@ -558,7 +560,6 @@ module Blogs
     end
 
     def url
-      pp Blogs.config
       Blogs.config[:blog_controller].call.r(slug)
     end
 
@@ -568,10 +569,10 @@ module Blogs
 
     def date
       ret = if published?
-        metadata.published_date
-      else
-        metadata.date
-      end
+              metadata.published_date
+            else
+              metadata.date
+            end
       ret
     end
 
@@ -731,7 +732,7 @@ module Blogs
     include FileWriter
 
     FIELDS = [:filename, :title, :date, :author, :published_date,
-      :tags, :edit_date, :group, :language, :image, :template, :published]
+              :tags, :edit_date, :group, :language, :image, :template, :published]
 
     attr_accessor *FIELDS
 
