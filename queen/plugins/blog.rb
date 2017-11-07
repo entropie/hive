@@ -55,8 +55,6 @@ module Blogs
     end
   end
 
-
-
   include Helper::Flickr
 
   def self.html_truncate(html, url, length, o = true)
@@ -163,7 +161,6 @@ module Blogs
     end
 
     def read
-      debug "reading posts in ..."
       replace Database.read_for # do
     end
 
@@ -405,6 +402,22 @@ module Blogs
       metadata.image
     end
 
+    def image=(imagepath)
+      dig = Digest::SHA1.file(imagepath).to_s
+      target = "%s%s" % [dig, File.extname(imagepath).downcase]
+      target_path = attachment_path(dig)
+      FileUtils.mkdir_p(attachment_path(dig))
+
+      FileUtils.cp(imagepath, File.join(target_path, target), :verbose => true)
+        
+      ts = Blogs.config[:resize_methods]
+      Helper::ImageResize::ImageResizeFacility.new(:path => File.join(target_path)) {
+        resize(File.join(target_path, target))
+      }.start(*ts)
+      metadata.image = target
+      metadata.update!
+    end
+
     def slug
       @slug ||= Blogs.to_slug(title)
     end
@@ -413,16 +426,17 @@ module Blogs
       File.join(File.join(Blogs.config[:http_attachment_path], slug, *args))
     end
 
-    def vitrine_image(version = nil)
-      vif = vitrine_image_file
-      vif = File.join(version.to_s, vif) if version
-      http_attachment_path("vitrine", vif)
-    rescue
-      if version
-        "/img/vitrine-default-#{version}.jpg"
-      else
-        "/img/vitrine-default.jpg"
-      end
+    def vitrine_image(version = "", default = "")
+      ident = metadata.image.split(".").first
+
+      http_attachment_path(ident, version, vitrine_image_file)
+
+      
+      # if version
+      #   "/img/vitrine-default-#{version}.jpg"
+      # else
+      #   "/img/vitrine-default.jpg"
+      # end
     end
 
     def intro(link = true)
@@ -675,6 +689,7 @@ module Blogs
 
   module Database
     def self.read_for(&blk)
+      debug "reading posts in ... #{Queen::BEEHIVE.media_path(base_path + "/*.yaml")}"
       ret = contents
       ret.sort_by!{ |pst| pst.post.date }.reverse!
       ret.each(&blk) if block_given?
@@ -689,8 +704,8 @@ module Blogs
       @groups
     end
 
-    def self.glob
-      Dir.glob(Queen::BEEHIVE.media_path(base_path + "/*.yaml"))
+    def self.glob(p = Queen::BEEHIVE.media_path(base_path + "/*.yaml"))
+      Dir.glob(p)
     end
 
     def self.clear!
