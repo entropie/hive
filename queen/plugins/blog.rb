@@ -423,20 +423,18 @@ module Blogs
     end
 
     def http_attachment_path(*args)
-      File.join(File.join(Blogs.config[:http_attachment_path], slug, *args))
+      File.join(File.join(Blogs.config[:http_attachment_path], slug, *args.map(&:to_s)))
     end
 
     def vitrine_image(version = "", default = "")
       ident = metadata.image.split(".").first
       http_attachment_path(ident, version, vitrine_image_file)
-
     rescue
-      ""
-      # if version
-      #   "/img/vitrine-default-#{version}.jpg"
-      # else
-      #   "/img/vitrine-default.jpg"
-      # end
+      if version and version != ""
+        "/img/vitrine-default-#{version}.jpg"
+      else
+        "/img/vitrine-default.jpg"
+      end
     end
 
     def intro(link = true)
