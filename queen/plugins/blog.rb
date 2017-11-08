@@ -428,10 +428,10 @@ module Blogs
 
     def vitrine_image(version = "", default = "")
       ident = metadata.image.split(".").first
-
       http_attachment_path(ident, version, vitrine_image_file)
 
-      
+    rescue
+      ""
       # if version
       #   "/img/vitrine-default-#{version}.jpg"
       # else
@@ -503,14 +503,8 @@ module Blogs
       Blogs.template_path(template)
     end
 
-    def image(which = nil)
-      if which
-        http_attachment_path("vitrine", which.to_s, metadata.image)
-      else
-        http_attachment_path("vitrine", metadata.image)
-      end
-    rescue # FIXME: not the vitrine image, but the thumbnail
-      ""
+    def image(which = "")
+      vitrine_image(which)
     end
 
     def default_path
