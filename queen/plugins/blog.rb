@@ -569,6 +569,10 @@ module Blogs
       Blogs.config[:blog_controller].call.r(slug)
     end
 
+    def edit_url
+      Blogs.config[:admin_controller].call.r(:blog, slug)
+    end
+
     def author
       metadata.author.to_html
     end
@@ -596,10 +600,6 @@ module Blogs
 
     def draft?
       not metadata.published?
-    end
-
-    def edit_url
-      PostController.r(:edit, slug)
     end
 
     def publish_or_unpublish_url
