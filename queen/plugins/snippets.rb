@@ -1,5 +1,10 @@
 module Snippets
 
+  Plugins.set_plugin_defaults_for(self, {
+                                    :attachment_path      => "snippets",
+                                    :admin_controller     => proc{AdminController}
+                          })
+  
   def self.[](obj)
     read unless @snippets
     r = snippets[obj]
@@ -22,15 +27,6 @@ module Snippets
     end
     snippets
   end
-
-  def self.config=(hsh)
-    @config = hsh
-  end
-
-  def self.config
-    @config
-  end
-
 
   def self.snippets
     @snippets ||= Snippets.new
@@ -69,7 +65,6 @@ module Snippets
       select{|s| s.identifier == obj}.first
     end
   end
-
 
   class Snippet
 

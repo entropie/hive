@@ -2,18 +2,25 @@
 module Gallery
 
 
+  Plugins.set_plugin_defaults_for(self, {
+                                    :attachment_path      => "gallery",
+                                    :http_path          =>    "/assets/gallery",
+                                    :blog_controller    =>    proc { BlogController },
+                                    :admin_controller   =>    proc { AdminController },
+                                    :gallery_controller =>    proc { GalleryController },
+                                    :metadata_defaults  =>    {
+                                      :public           =>    false
+                                    },
+                                    :image_metadata_defaults  =>    {
+                                      :public           =>    false
+                                    },
+                                    :resize_methods     =>    [:thumbnail, :medium, :sidebar, :big, :panorama, :blurred]
+                                  })
+
   def self.to_slug(str)
     str.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
   end
 
-
-  def self.config=(hsh)
-    @config = hsh
-  end
-
-  def self.config
-    @config
-  end
 
   class Galleries < Hash
 

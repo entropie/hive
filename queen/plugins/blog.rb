@@ -6,6 +6,15 @@
 
 module Blogs
 
+  Plugins.set_plugin_defaults_for(self, {
+                                    :template_path      =>    "blog/styles",
+                                    :attachment_path    =>    "blog/attachments",
+                                    :http_attachment_path =>  "/assets/blog/attachments",
+                                    :blog_controller    =>    proc { BlogController },
+                                    :admin_controller   =>    proc { AdminController },
+                                    :resize_methods     =>    [:thumbnail, :medium, :sidebar, :big, :panorama, :blurred]
+                                  })
+
   module FileWriter
     include FileUtils
 
@@ -62,15 +71,6 @@ module Blogs
     omis = "<span style='color:silver'>[...]</span>"
     wb = /([\.\?\!])/
     TruncateHtml::HtmlTruncator.new(html_string, :length => length, :omission => "", :word_boundary => wb).truncate
-  end
-
-
-  def self.config=(hsh)
-    @config = hsh
-  end
-
-  def self.config
-    @config
   end
 
   def self.templates
