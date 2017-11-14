@@ -681,7 +681,7 @@ module Blogs
 
   module Database
     def self.read_for(&blk)
-      debug "reading posts in ... #{Queen::BEEHIVE.media_path(base_path + "/*.yaml")}"
+
       ret = contents
       ret.sort_by!{ |pst| pst.post.date }.reverse!
       ret.each(&blk) if block_given?
@@ -714,6 +714,7 @@ module Blogs
     def self.contents
       return to_a if to_a and not to_a.empty?
       clear!
+      debug "reading posts in ... #{Queen::BEEHIVE.media_path(base_path + "/*.yaml")}"
       glob.each do |yml|
         debug "  loading #{File.basename(yml)}"
         self << YAML::load_file(yml)
