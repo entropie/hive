@@ -30,10 +30,6 @@ module PageMeta
       ::PageMeta::config[:site_name]
     end
     
-    # def title(str = "")
-    #   str
-    # end
-
     def url
       ""
     end
@@ -66,7 +62,7 @@ module PageMeta
   end
 
   def to_meta
-    pm = Facebook.new(:title => _title, :url => SchwelleController::URL(_url.to_s), :site_name => ::PageMeta.config[:site_name], :image => _image, :description => _description)
+    pm = Facebook.new(:title => _title, :url => SchwelleController::URL(_url.to_s), :site_name => ::PageMeta.config[:site_name], :image => SchwelleController::URL(_image.to_s), :description => _description)
     pm.to_html
   end
   
