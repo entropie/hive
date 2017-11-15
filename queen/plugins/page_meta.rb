@@ -4,7 +4,7 @@ module PageMeta
   Plugins.set_plugin_defaults_for(self, {
                                     :attachment_path      => "site title",
                                     :title_str            => "%s &mdash; %s",
-                                    :site_name            => "Schwierige Felle e.V.",
+                                    :site_name            => "",
                                     :vitrine_image        => ""
                                   })
 
@@ -59,7 +59,7 @@ module PageMeta
   end
 
   def _description
-    respond_to?(:short_description) and short_description
+    respond_to?(:short_description) and short_description or ::PageMeta.config[:site_desc]
   end
 
   def to_meta
