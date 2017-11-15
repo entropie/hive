@@ -4,7 +4,8 @@ module PageMeta
   Plugins.set_plugin_defaults_for(self, {
                                     :attachment_path      => "site title",
                                     :title_str            => "%s &mdash; %s",
-                                    :site_name             => "Schwierige Felle e.V."
+                                    :site_name            => "Schwierige Felle e.V.",
+                                    :vitrine_image        => ""
                                   })
 
   
@@ -35,7 +36,7 @@ module PageMeta
     end
 
     def vitrine_image(*args)
-      
+      ::PageMeta::config[:vitrine_image]
     end
   end
 
@@ -62,7 +63,7 @@ module PageMeta
   end
 
   def to_meta
-    pm = Facebook.new(:title => _title, :url => SchwelleController::URL(_url.to_s), :site_name => ::PageMeta.config[:site_name], :image => SchwelleController::URL(_image.to_s), :description => _description)
+    pm = Facebook.new(:title => _title, :url => SchwelleController::URL(_url.to_s), :site_name => ::PageMeta.config[:site_name], :image => SchwelleController::URL(_image.to_s), :description => _description, :type => "article")
     pm.to_html
   end
   
