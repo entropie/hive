@@ -43,13 +43,18 @@ module Gallery
       all.dup.select{|g| g.slug == slug }.first
     end
 
+    def self.by_short_identifier(short_identifier)
+      all.dup.select{|g| g.short_identifier == short_identifier }.first
+    end
+
     class Gallery
 
       attr_accessor :path
 
       class Metadata
 
-        attr_accessor :file, :title
+        attr_accessor :file, :title, :short_identifier
+
         def data
           (@data ||= {})
         end
@@ -101,6 +106,7 @@ module Gallery
           end
           write!
         end
+
       end
 
       class ImageMetadata < Metadata
@@ -145,6 +151,10 @@ module Gallery
           File.join(@path, "metadata.yaml")
         end
 
+        def short_identifier
+          metadata.short_identifier || ident
+        end
+
         def set(what, value)
           metadata.update(what.to_sym => value)
         end
@@ -156,8 +166,37 @@ module Gallery
         def metadata
           @metadata ||= ImageMetadata.read_from( metadata_file )
         end
+
+        def to_html(s = "big")
+          "<img class='img-rounded' data-sr='enter bottom, vFactor 0.3, scale up 20%%' src='%s' alt='%s'/>" % [url(s), title]
+        end
+        
       end
 
+      class DummyImage
+        def initialize(obj)
+          @obj = obj
+        end
+        
+        def url
+          "holder.js/300x200" % [@obj]
+        end
+
+        def to_html(*args)
+          "<img class='img-rounded' data-sr='enter bottom, vFactor 0.3, scale up 20%%' src='%s' alt='dummy'/>" % url
+        end
+      end
+
+      class Images < Array
+        def [](obj)
+          str = obj.to_s
+          r = select{|a| a.short_identifier == str}.first
+          unless r
+            return DummyImage.new(obj)
+          end
+          r
+        end
+      end
 
       def set(what, value)
         metadata.update(what.to_sym => value)
@@ -222,17 +261,26 @@ module Gallery
       end
       
       def read
-        Dir.glob("#{path}/*").map{|spath|
+        r = Dir.glob("#{path}/*").map{|spath|
           if File.basename(spath).size == 64
             Image.new(spath, self)
           else
             nil
           end
         }.compact
+        Images.new(r)
       end
 
       def images
         read
+      end
+
+      def contents
+        read
+      end
+
+      def vitrine_image(str = "")
+        contents.sort_by{rand}.first.url
       end
 
       def edit_url
@@ -246,7 +294,10 @@ module Gallery
       def link
         "<a href='%s'>%s</a>" % [url, human_title]
       end
-      
+
+      def page_title
+        "Gallery: %s" % human_title
+      end
     end
   end
   

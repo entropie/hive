@@ -615,6 +615,12 @@ module Blogs
         FileUtils.rm_rf(ftd, :verbose => true)
       end
     end
+
+    def page_title
+      "Vereinstagebuch &mdash; %s" % title
+    end
+
+
   end
 
   class Draft < Post

@@ -66,10 +66,28 @@ module Snippets
     end
   end
 
+  module GalleryExtension
+    def gallery
+      Gallery::Galleries.by_slug("website")
+    end
+
+    def images
+      gallery.images
+    end
+  end
+
+  module SnippetExtension
+    def snippet(str)
+      SchwelleController.render_snippet(str)
+    end
+  end
+  
   class Snippet
 
+    include GalleryExtension
+    include SnippetExtension
+    
     attr_reader :identifier
-
 
     def self.snippet_variants
       @snippet_variants ||= []
@@ -138,7 +156,7 @@ module Snippets
     end
 
     def tag
-      "<div class='snippet' data-id='#{identifier}'>%s</div>"
+      "<span class='snippet' data-id='#{identifier}'>%s</span>"
     end
   end
 
@@ -156,7 +174,7 @@ module Snippets
 
     def render
       engine = Haml::Engine.new(value)
-      tag % engine.render
+      tag % engine.render(self)
     rescue
       "<span class='snippet snippet-error'>Fehler beim rendern von #{identifier}: #{$!}</span>"
     end
@@ -172,7 +190,7 @@ module Snippets
     end
 
     def tag
-      "<div class='markdown_snippet' data-id='#{identifier}'>%s</div>"
+      "<span class='markdown_snippet' data-id='#{identifier}'>%s</span>"
     end
 
     def render
