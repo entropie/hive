@@ -8,7 +8,8 @@ module PageMeta
                                     :vitrine_image        => ""
                                   })
 
-  
+ 
+ 
   class DefaultMetaElement
     include PageMeta
     def page_title
