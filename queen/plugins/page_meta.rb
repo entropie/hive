@@ -44,7 +44,6 @@ module PageMeta
 
   def _title
     "asd"
-    
   end
 
   def _title(str = nil)

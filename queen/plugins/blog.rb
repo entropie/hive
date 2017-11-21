@@ -446,6 +446,10 @@ module Blogs
       str
     end
 
+    def short_description(link = true)
+      str = Nokogiri::HTML(to_html).xpath("//p").first.text
+    end
+
     def publish!
       src = relative_path
       target = relative_path.gsub(/\/draft\//, "/posts/")
