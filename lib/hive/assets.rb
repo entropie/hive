@@ -50,7 +50,9 @@ module Hive
 
       str = ""
       File.open(afile, 'w+') do |fp|
+
         files.each do |file|
+          fp.puts "/*** queen taling, be quiet: #{file} ***/"
           compass_output_file = File.join("view/css", file.gsub(".css", ".sass"))
           if not file.include?("min") and not file.include?("pack")
             nfile = beehive.app_root("view/css/", file.gsub(".css", ".sass"))
@@ -63,6 +65,7 @@ module Hive
               compiler.compile!
             end
             ns = File.readlines(beehive.app_root("public/css", file)).join
+            fp.puts(ns)
             puts "sass2css: #{nfile}"
           else
             nfile = beehive.app_root("public/css/", file)
@@ -71,6 +74,7 @@ module Hive
           end
           fp.puts ""
         end
+
       end
       puts ">>> #{afile} is #{File.size(afile)/1024} KBytes"
     end
