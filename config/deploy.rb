@@ -152,7 +152,6 @@ BEEHIVES.each do |beehive|
       task :update_vendor do
         run "cd #{beehive_path} && git submodule update --init --recursive"
       end
-      after 'deploy:link:_media', 'deploy:update_vendor'
 
       task :link_media do
         live_media_path = File.join(beehive_path, "media")
@@ -169,6 +168,7 @@ BEEHIVES.each do |beehive|
         end
       end
       after 'deploy', 'web:reset'
+      after 'web:reset', 'deploy:update_vendor'
 
 
       task :setup do
