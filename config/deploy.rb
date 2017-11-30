@@ -149,6 +149,11 @@ BEEHIVES.each do |beehive|
       end
       after "deploy:update_beehive", "deploy:link_media"
 
+      task :update_vendor do
+        run "cd #{beehive_path} && git submodule update --init --recursive"
+      end
+      after 'deploy:link:_media', 'deploy:update_vendor'
+
       task :link_media do
         live_media_path = File.join(beehive_path, "media")
         unless remote_file_exists?(live_media_path)
@@ -163,7 +168,8 @@ BEEHIVES.each do |beehive|
           link_media
         end
       end
-      after 'deploy', 'web:reset' 
+      after 'deploy', 'web:reset'
+
 
       task :setup do
         %w'/u /home/unicorn'.each do |lpath|

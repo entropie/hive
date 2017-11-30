@@ -36,7 +36,7 @@ module Hive
       Compass.add_configuration(
         {
           :project_path     => Queen::BEEHIVE.app_root,
-          :output_style     => :expanded,
+          :output_style     => :compressed,
           :sass_path        => "view/css",
           :css_path         => "public/css",
           :additional_import_paths => ["../vendor"]
@@ -63,7 +63,6 @@ module Hive
               compiler.compile!
             end
             ns = File.readlines(beehive.app_root("public/css", file)).join
-            fp.puts ns
             puts "sass2css: #{nfile}"
           else
             nfile = beehive.app_root("public/css/", file)
