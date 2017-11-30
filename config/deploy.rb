@@ -165,10 +165,10 @@ BEEHIVES.each do |beehive|
           update
           update_beehive
           link_media
+          update_vendor
         end
       end
       after 'deploy', 'web:reset'
-      after 'web:reset', 'deploy:update_vendor'
 
 
       task :setup do
