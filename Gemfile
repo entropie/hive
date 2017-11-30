@@ -3,14 +3,13 @@
 source :rubygems
 
 #gem "sshkit", "=1.3.0"
+gem "rake", "=12.2.1"
 gem "unicorn", "=4.8.0"
 gem "rack"
 gem "json"
 gem "haml", "=4.0.7"
 gem "sass"
-gem "activesupport", "=3.2.14"
 gem "mime-types", "=1.25.1"
-gem "pg"
 gem "sequel", "=3.44.0"
 gem 'ramaze'
 gem "mongrel", '>= 1.2.0.pre2'
@@ -40,3 +39,4 @@ gem "truncate_html"
 gem "nokogiri"
 gem "flickraw"
 gem 'capistrano-unicorn', :require => false
+gem 'compass'
