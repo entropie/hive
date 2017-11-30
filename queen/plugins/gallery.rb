@@ -168,7 +168,7 @@ module Gallery
         end
 
         def to_html(s = "big")
-          "<img class='img-rounded' data-sr='enter bottom, vFactor 0.3, scale up 20%%' src='%s' alt='%s'/>" % [url(s), title]
+          "<img class='rounded' data-sr='enter bottom, vFactor 0.3, scale up 20%%' src='%s' alt='%s'/>" % [url(s), title]
         end
         
       end
