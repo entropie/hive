@@ -138,7 +138,7 @@ module Snippets
     end
 
     def render
-      "<div class='snippet error'>#{identifier}</div>"
+      "<div class='snippet error' data-id='#{identifier}'>#{identifier}</div>"
     end
 
     def url
@@ -176,7 +176,7 @@ module Snippets
       engine = Haml::Engine.new(value)
       tag % engine.render(self)
     rescue
-      "<span class='snippet snippet-error'>Fehler beim rendern von #{identifier}: #{$!}</span>"
+      "<span class='snippet snippet-error' data-id='#{identifier}'>Fehler beim rendern von #{identifier}: #{$!}</span>"
     end
 
     def edit_class
