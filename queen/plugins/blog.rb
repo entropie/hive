@@ -618,6 +618,8 @@ module Blogs
       [attachment_path, path, metadata.md_filename].each do |ftd|
         FileUtils.rm_rf(ftd, :verbose => true)
       end
+      Database.reload!
+      self
     end
 
     def page_title
