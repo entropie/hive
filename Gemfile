@@ -39,4 +39,4 @@ gem "truncate_html"
 gem "nokogiri"
 gem "flickraw"
 gem 'capistrano-unicorn', :require => false
-gem 'compass'
+gem 'compass-core'

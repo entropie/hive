@@ -2,7 +2,6 @@
 #
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
-require 'compass/sass_compiler'
 module Hive
 
   class BeehiveAssets
