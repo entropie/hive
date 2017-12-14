@@ -135,9 +135,9 @@ BEEHIVES.each do |beehive|
         sudo "ln -nfs #{current_path}/beehives/#{beehive}/config/unicorn_init.sh /etc/init.d/unicorn_#{beehive}"
       end
 
-      task :link_media, :roles => :app do
-        run "ln -s %s %s" % [bhive.media_path, beehive_source_media_path]
-      end
+      # task :link_media, :roles => :app do
+      #   run "ln -s %s %s" % [bhive.media_path, beehive_source_media_path]
+      # end
       after "deploy:setup", "deploy:setup_config"
       
 
@@ -148,6 +148,10 @@ BEEHIVES.each do |beehive|
         run "cd #{current_path} && bundle install"
       end
       after "deploy:update_beehive", "deploy:link_media"
+
+      task :update_vendor do
+        run "cd #{beehive_path} && git submodule update --init --recursive"
+      end
 
       task :link_media do
         live_media_path = File.join(beehive_path, "media")
@@ -161,9 +165,11 @@ BEEHIVES.each do |beehive|
           update
           update_beehive
           link_media
+          update_vendor
         end
       end
-      after 'deploy', 'web:reset' 
+      after 'deploy', 'web:reset'
+
 
       task :setup do
         %w'/u /home/unicorn'.each do |lpath|

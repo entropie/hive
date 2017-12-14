@@ -1,3 +1,4 @@
+# coding: utf-8
 #
 #
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
@@ -69,7 +70,8 @@ module Hive
                 new_img = Image.new(img, target)
                 new_img.facility = self
                 new_img.resize(policy)
-              rescue Magick::ImageMagickError
+
+             rescue Magick::ImageMagickError
                 p $!
                 bads << img
               end
@@ -116,6 +118,12 @@ module Hive
         def initialize(path, target = nil)
           self.path = File.new(path)
           self.image = Magick::Image.read(path).first
+
+          il = Magick::ImageList.new
+          bin = File.open(path, "r"){|f| f.read}
+          self.image = il.from_blob(bin)
+
+          
           self.target = target
           raise Magick::ImageMagickError, "image is nil" unless image
         end

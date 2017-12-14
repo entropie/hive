@@ -377,7 +377,7 @@ module Hive
 
     def standalone!
       set_enviroment
-      delete_generated_files
+      #delete_generated_files
 
       Ramaze.middleware :dev do
         use Rack::Lint

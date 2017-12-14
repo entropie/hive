@@ -57,7 +57,7 @@ Hives.each do |ident, beehive|
     sopts.on("-M", "--minify") do
       beehive.assets.read
       beehive.set_enviroment
-      BeehiveAssets.make_static_js
+      BeehiveAssets.make_static_css
     end
 
     sopts.on("-C", "--check-migration") do 

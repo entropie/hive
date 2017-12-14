@@ -2,7 +2,7 @@
 #
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
-
+require 'compass/sass_compiler'
 module Hive
 
   class BeehiveAssets
@@ -32,17 +32,41 @@ module Hive
 
     def self.make_static_css
       beehive = Queen::BEEHIVE
+
+      Compass.add_configuration(
+        {
+          :project_path     => Queen::BEEHIVE.app_root,
+          :output_style     => :compressed,
+          :sass_path        => "view/css",
+          :css_path         => "public/css",
+          :additional_import_paths => ["../vendor"]
+        },'custom-name')
+
+
       files = beehive.config.css.map{ |_, f| f}
 
       afile = beehive.app_root("public/css/app.css")
+      #FileUtils.rm_f(afile, :verbose => true)
 
+      str = ""
       File.open(afile, 'w+') do |fp|
+
         files.each do |file|
+          fp.puts "/*** queen taling, be quiet: #{file} ***/"
+          compass_output_file = File.join("view/css", file.gsub(".css", ".sass"))
           if not file.include?("min") and not file.include?("pack")
             nfile = beehive.app_root("view/css/", file.gsub(".css", ".sass"))
-            sass = Sass::Engine.new(File.readlines(nfile).join, :style => :compressed)
+
+            compiler = Compass.sass_compiler({
+                                               :only_sass_files => [compass_output_file]
+                                             })
+
+            Dir.chdir(Queen::BEEHIVE.app_root) do
+              compiler.compile!
+            end
+            ns = File.readlines(beehive.app_root("public/css", file)).join
+            fp.puts(ns)
             puts "sass2css: #{nfile}"
-            fp.puts sass.render
           else
             nfile = beehive.app_root("public/css/", file)
             puts "sass2css: ignoring: #{file}"
@@ -50,6 +74,7 @@ module Hive
           end
           fp.puts ""
         end
+
       end
       puts ">>> #{afile} is #{File.size(afile)/1024} KBytes"
     end
