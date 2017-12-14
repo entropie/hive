@@ -2,6 +2,7 @@
 #
 # Author:  Michael 'entropie' Trommer <mictro@gmail.com>
 #
+
 module Hive
 
   class BeehiveAssets
