@@ -5,13 +5,16 @@ module PageMeta
                                     :attachment_path      => "site title",
                                     :title_str            => "%s &mdash; %s",
                                     :site_name            => "",
-                                    :vitrine_image        => ""
+                                    :vitrine_image        => "",
+                                    :additional_meta      => { "image:width" => 1024, "image:height" => 768, :type => :article }
                                   })
 
  
  
-  class DefaultMetaElement
+  class MetaElements
+
     include PageMeta
+
     def page_title
       ""
     end
@@ -43,7 +46,7 @@ module PageMeta
 
 
   def _title
-    "asd"
+    ""
   end
 
   def _title(str = nil)
@@ -55,7 +58,7 @@ module PageMeta
   end
 
   def _image
-    vitrine_image(:medium)
+    vitrine_image(:big)
   end
 
   def _description
@@ -67,6 +70,7 @@ module PageMeta
     pm.to_html
   end
   
+
   class Meta
 
     class Entry
@@ -111,7 +115,7 @@ module PageMeta
     end
 
     def initialize(hash)
-      super(hash)
+      super(hash.merge(::PageMeta.config[:additional_meta] || {}))
     end
 
   end
