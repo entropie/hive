@@ -46,7 +46,7 @@ module Hive
       files = beehive.config.css.map{ |_, f| f}
 
       afile = beehive.app_root("public/css/app.css")
-      #FileUtils.rm_f(afile, :verbose => true)
+      FileUtils.rm_f(afile, :verbose => true)
 
       str = ""
       File.open(afile, 'w+') do |fp|
