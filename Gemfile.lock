@@ -33,9 +33,19 @@ GEM
     carrierwave-sequel (0.1.1)
       carrierwave
       sequel
+    chunky_png (1.3.8)
+    compass (1.0.3)
+      chunky_png (~> 1.2)
+      compass-core (~> 1.0.2)
+      compass-import-once (~> 1.0.5)
+      rb-fsevent (>= 0.9.3)
+      rb-inotify (>= 0.9)
+      sass (>= 3.3.13, < 3.5)
     compass-core (1.0.3)
       multi_json (~> 1.0)
       sass (>= 3.3.0, < 3.5)
+    compass-import-once (1.0.5)
+      sass (>= 3.2, < 3.5)
     crass (1.0.3)
     daemons (1.0.10)
     dalli (2.7.6)
@@ -54,6 +64,7 @@ GEM
       faraday_middleware (>= 0.9)
       loofah (>= 2.0)
       sax-machine (>= 1.0)
+    ffi (1.9.18)
     flickraw (0.9.9)
     gem_plugin (0.2.3)
     haml (4.0.7)
@@ -72,7 +83,7 @@ GEM
     innate (2015.10.28)
       rack (~> 1.6.4)
     json (2.1.0)
-    kgio (2.11.0)
+    kgio (2.11.1)
     koala (3.0.0)
       addressable
       faraday
@@ -108,6 +119,9 @@ GEM
     ramaze (2012.12.08)
       innate (>= 2012.12)
       rake
+    rb-fsevent (0.10.2)
+    rb-inotify (0.9.10)
+      ffi (>= 0.5.0, < 2)
     rdiscount (2.2.0.1)
     redcarpet (3.4.0)
     rmagick (2.16.0)
@@ -155,7 +169,7 @@ DEPENDENCIES
   capistrano-unicorn
   carrierwave
   carrierwave-sequel
-  compass-core
+  compass (~> 1.0.0.alpha.21)
   dalli
   execjs (= 2.0.2)
   faker
