@@ -31,8 +31,13 @@ end
 
     
 def debug(str = "")
-  puts "#{str.empty? ? "  " : "->" } #{str}" #if $DEBUG
+  puts "  #{str.empty? ? "  " : "->" } #{str}" #if $DEBUG
 end
+def error(str = "")
+  puts "! #{str.empty? ? "  " : "->" } #{str}" #if $DEBUG
+end
+
+
 
 module Hive
   Version = [0, 0, 5]

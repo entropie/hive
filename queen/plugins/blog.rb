@@ -728,8 +728,12 @@ module Blogs
       clear!
       debug "reading posts in ... #{Queen::BEEHIVE.media_path(base_path + "/*.yaml")}"
       glob.each do |yml|
-        debug "  loading #{File.basename(yml)}"
-        self << YAML::load_file(yml)
+        begin
+          debug "  loading #{File.basename(yml)}"
+          self << YAML::load_file(yml)
+        rescue ArgumentError
+          error "  failed to load #{File.basename(yml)} '#{$!}'"
+        end
       end
       to_a
     end
