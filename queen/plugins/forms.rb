@@ -54,13 +54,12 @@ module Forms
     end
 
     def captcha
-      '<div class="g-recaptcha" data-sitekey="6Lc5RkcUAAAAAI7YllQ69BqRHvLer2lRnpFBE5PJ"></div>'
+      ReCaptcha.recaptcha_tag
     end
     
     def to_html
       "<form%s name='%s' id='%s'>%s%s%s</form>" % [action, @name.to_s, @name.to_s, @groups.to_html, submit, captcha]
     end
-
 
     class Formgroups < Array
       def initialize(form)

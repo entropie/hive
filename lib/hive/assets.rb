@@ -83,7 +83,9 @@ module Hive
       attr_accessor :roles
       attr_accessor :domain
       attr_accessor :twitter
+      attr_accessor :recaptcha
       attr_reader   :beehive
+
 
       def initialize(beehive)
         @beehive = beehive
