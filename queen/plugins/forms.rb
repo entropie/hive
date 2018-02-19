@@ -14,8 +14,6 @@ module Forms
   
 
   class Form
-
-
     attr_reader :name, :groups
 
     attr_accessor :action
@@ -96,16 +94,15 @@ module Forms
     end
 
     class Formelement
+
+      attr_accessor :opts, :desc, :group, :ident, :attr
+      
       def self.decide(m, *args)
         clz = case m.to_s
-              when /^xo_(.*)$/
-                Radio.new($1)
-              when /^xx_(.*)$/
-                Checkbox.new($1)
-              when /^XO_(.*)$/
-                Select.new($1)
-              when /^text_(.*)$/
-                Textarea.new($1)
+              when /^xo_(.*)$/   then    Radio.new($1)
+              when /^xx_(.*)$/   then    Checkbox.new($1)
+              when /^XO_(.*)$/   then    Select.new($1)
+              when /^text_(.*)$/ then    Textarea.new($1)
               else
                 if m.to_s[-1] == "?"
                   m = m.to_s[0..-2]
@@ -121,24 +118,8 @@ module Forms
         clz
       end
 
-      def values(vals)
-        @values = vals
-      end
-      
       def to_html
         tag
-      end
-      
-      def opts=(obj)
-        @opts = obj
-      end
-
-      def desc=(str)
-        @desc = str
-      end
-
-      def group=(grp)
-        @group = grp
       end
 
       def initialize(ident, *args)
@@ -165,9 +146,9 @@ module Forms
         " id='%s' name='%s' " % [tag_id, tag_id]
       end
 
-      def get_values
-        if @values
-          return @values.map{|v,k| " %s='%s'" % [v,k]}.join
+      def get_attr
+        if attr
+          return attr.map{|v,k| " %s='%s' " % [v,k]}.join
         end
         ""
       end
@@ -177,11 +158,10 @@ module Forms
       end
 
       def tag
-        "<div class='col'>%s<%s%s%s%s%s/></div>" % [label, self.class::TAG, tag_ident, type, get_values, content]
+        "<div class='col'>%s<%s%s%s%s%s/></div>" % [label, "input", tag_ident, type, get_attr, content]
       end
       
       class Text < Formelement
-        TAG = "input"
       end
 
       class Textarea < Formelement
@@ -208,8 +188,6 @@ module Forms
       end
 
       class Radio < Formelement
-        TAG = "input"
-
         def tag
           "<div class='col'>%s%s</div>" % [label, content]
         end
@@ -223,12 +201,9 @@ module Forms
           end
           str
         end
-
       end
 
       class Select < Formelement
-        TAG = "select"
-
         def content
           str = ""
           if @opts
@@ -240,13 +215,10 @@ module Forms
         end
 
         def tag
-          "<div class='col'>%s<select%s%s>%s</select></div>" % [label, tag_ident, get_values, content]
+          "<div class='col'>%s<select%s%s>%s</select></div>" % [label, tag_ident, get_attr, content]
         end
       end
 
-      class Textarea < Formelement
-        TAG = "textarea"
-      end
     end
 
   end
