@@ -16,13 +16,20 @@ module Forms
   class Form
     attr_reader :name, :groups
 
-    attr_accessor :action
+    attr_accessor :action, :request
 
     def initialize(name)
       @name = name
       @groups = Formgroups.new(self)
     end
 
+    def params(param = nil)
+      if param
+        request.params(param)
+      end
+      request.params
+    end
+    
     def eval(str)
       Kernel.eval(str, binding)
     end
@@ -61,23 +68,34 @@ module Forms
       end
     end
 
-    class Formgroup
+    module MMFormElemts
 
       attr_accessor :form
+
+      def _group
+        @group || self
+      end
+
       
       def method_missing(m, *rest, &blk)
-        fe = Formelement.decide(m, *rest)
-        fe.group = self
+        fe = Formelement.decide(m, *rest, &blk)
+        fe.group = _group
+        fe.form = form
         if block_given?
           fe.instance_eval(&blk)
         end
-        @elements << fe
+        (@elements ||= []) << fe
         fe
       end
+    end
 
+    
+    class Formgroup
+
+      include MMFormElemts
+      
       def initialize(label, desc)
         @label, @desc = label, desc
-        @elements = []
       end
 
       def label
@@ -96,8 +114,9 @@ module Forms
     class Formelement
 
       attr_accessor :opts, :desc, :group, :ident
+      attr_accessor :request_value, :form
       
-      def self.decide(m, *args)
+      def self.decide(m, *args, &blk)
         clz = case m.to_s
               when /^xo_(.*)$/   then    Radio.new($1)
               when /^xx_(.*)$/   then    Checkbox.new($1)
@@ -128,15 +147,26 @@ module Forms
         self
       end
 
+      def _hattr(obj = nil)
+        @hattr ||= {}
+        @hattr.merge!(obj) if obj
+        self
+      end
+
       def to_html
         tag
       end
 
       def initialize(ident, *args)
         @ident = ident
+        @procs = {}
       end
       
       def content
+        ret = form.params[tag_id] || ""
+        " value='%s' " % ret
+      rescue
+        p $!
         ""
       end
 
@@ -163,33 +193,95 @@ module Forms
         ""
       end
 
+      def get_hattr
+        if @hattr
+          return @hattr.map{|v,k| " %s='%s' " % [v,k]}.join
+        end
+        ""
+      end
+
       def label
         "<label for='%s'>%s</label>" % [tag_id, @desc]
       end
 
-      def tag
-        "<div class='col'>%s<%s%s%s%s%s/></div>" % [label, "input", tag_ident, type, get_attr, content]
+      def css_cls
+        "col"
       end
+
+      def tag
+        input = "<%s%s%s%s%s/>" % ["input", tag_ident, type, get_attr, content]
+        "<div class='%s'%s>%s%s</div>" % [css_cls, get_hattr, label, input]
+      end
+
+      def eval_procs
+        ret = ""
+        (@procs || []).each_pair do |ident, proc|
+          ret += proc.tag
+        end
+        ret
+      end
+
+      def value
+        form.params[tag_id]
+        
+      end
+
       
       class Text < Formelement
       end
 
       class Textarea < Formelement
         def tag
-          "<div class='col'>%s<textarea%s></textarea></div>" % [label, tag_ident, label, content]
+          "<div class='%s'>%s<textarea%s>%s</textarea></div>" % [css_cls, label, tag_ident, value, label, content]
         end
       end
 
-      class Checkbox < Formelement
+      class FormelementWithDynamicFields < Formelement
+
+        include MMFormElemts
+
+        def yes
+          r = yield._hattr("style" => "display:none", "data-val" => 1)
+          r.form = form
+          @procs[:yes] = r
+        end
+
+        def no
+          r = yield._hattr("style" => "display:none", "data-val" => 0)
+          r.form = form
+          @procs[:no] = r
+        end
+
+        def css_cls
+          str = "col"
+          str << " dynamic" if @procs[:yes] or @procs[:no]
+          str
+        end
+
+        def selected(k)
+          if k.to_s == form.params[tag_id] then " checked=checked " else "" end
+        end
+      end
+
+
+      class Checkbox < FormelementWithDynamicFields
+
+        def selected(k)
+          if form.params[tag_id].include?(k.to_s) then " checked=checked " else "" end
+        rescue
+          ""
+        end
+
+
         def tag
-          "<div class='col'>%s%s</div>" % [label, content]
+          "<div class='%s'>%s%s</div>" % [css_cls, label, content]
         end
 
         def content
           str = ""
           if @opts
             @opts.first.each_pair do |k, v|
-              str << "<input type='checkbox' name='%s[]' value='%s' />%s" % [tag_id, k, v, v]
+              str << "<input%s type='checkbox' name='%s[]' value='%s' %s/>%s" % [get_attr, tag_id, k, selected(k), v]
             end
           end
           str
@@ -197,35 +289,44 @@ module Forms
 
       end
 
-      class Radio < Formelement
+      class Radio < FormelementWithDynamicFields
+
+       
         def tag
-          "<div class='col'>%s%s</div>" % [label, content]
+          "<div class='%s'%s>%s%s%s</div>" % [css_cls, get_hattr, label, content, eval_procs]
         end
 
         def content
           str = ""
           if @opts
             @opts.first.each_pair do |k, v|
-              str << "<span class='%s-box'><input type='radio' name='%s' value='%s'>%s</input></span>" % [tag_id, tag_id, k, v, v]
+              str << "<span class='form-radio-box %s-box'><input%s type='radio' name='%s' value='%s' %s>%s</input></span>" % [tag_id, get_attr, tag_id, k, selected(k), v]
             end
           end
           str
         end
       end
 
-      class Select < Formelement
+      class Select < FormelementWithDynamicFields
+
+        def selected(k)
+          if form.params[tag_id].include?(k.to_s) then " selected=selected " else "" end
+        rescue
+          ""
+        end
+
         def content
           str = ""
           if @opts
             @opts.first.each_pair do |k, v|
-              str << "<option value='%s' id='%s'>%s</option>" % [k, tag_id, v]
+              str << "<option value='%s' id='%s'%selected>%s</option>" % [k, tag_id, selected(k), v]
             end
           end
           str
         end
 
         def tag
-          "<div class='col'>%s<select%s%s>%s</select></div>" % [label, tag_ident, get_attr, content]
+          "<div class='%s'>%s<select%s%s>%s</select></div>" % [css_cls, label, tag_ident, get_attr, content]
         end
       end
 
