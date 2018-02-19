@@ -95,7 +95,7 @@ module Forms
 
     class Formelement
 
-      attr_accessor :opts, :desc, :group, :ident, :attr
+      attr_accessor :opts, :desc, :group, :ident
       
       def self.decide(m, *args)
         clz = case m.to_s
@@ -116,6 +116,16 @@ module Forms
         clz.desc = args.shift
         clz.opts = args
         clz
+      end
+
+
+      def attr
+        (@attr ||= {})
+      end
+      
+      def hattr(obj)
+        attr.merge!(obj)
+        self
       end
 
       def to_html
