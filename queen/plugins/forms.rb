@@ -52,9 +52,13 @@ module Forms
       "<div class='col'><input type='submit' /></div>"
       
     end
+
+    def captcha
+      '<div class="g-recaptcha" data-sitekey="6Lc5RkcUAAAAAI7YllQ69BqRHvLer2lRnpFBE5PJ"></div>'
+    end
     
     def to_html
-      "<form%s name='%s' id='%s'>%s%s</form>" % [action, @name.to_s, @name.to_s, @groups.to_html, submit]
+      "<form%s name='%s' id='%s'>%s%s%s</form>" % [action, @name.to_s, @name.to_s, @groups.to_html, submit, captcha]
     end
 
 
