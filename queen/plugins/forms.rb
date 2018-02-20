@@ -61,6 +61,36 @@ module Forms
       "<form%s name='%s' id='%s'>%s%s%s</form>" % [action, @name.to_s, @name.to_s, @groups.to_html, submit, captcha]
     end
 
+    def to_mail(rp)
+      str = ""
+      @groups.each do |g|
+        str << "# %s\n\n" % [g.desc]
+        g.elements.each do |e|
+          str << "## %s\n\n" % e.desc
+          res = rp[e.tag_id]
+
+
+          n = if res.kind_of?(String)
+                res
+              elsif res.kind_of?(Array)
+                PP.pp(res, "")
+              elsif res == nil
+                "<keine angabe>"
+              end
+          n = n.gsub(/(.{1,#{78}})(\s+|\Z)/, "\\1\n")
+          str << "%s" % n
+          str << "\n"
+        end
+      end
+      str
+    end
+
+    def to_mail_html(rp)
+      ret = to_mail(rp)
+      markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, tables: true)
+      markdown.render(ret)
+    end
+
     class Formgroups < Array
       def initialize(form)
         @form = form
@@ -96,6 +126,8 @@ module Forms
     class Formgroup
 
       include MMFormElemts
+
+      attr_accessor :label, :desc, :elements
       
       def initialize(label, desc)
         @label, @desc = label, desc
