@@ -230,15 +230,6 @@ module Forms
       end
 
       
-      class Text < Formelement
-      end
-
-      class Textarea < Formelement
-        def tag
-          "<div class='%s'>%s<textarea%s>%s</textarea></div>" % [css_cls, label, tag_ident, value, label, content]
-        end
-      end
-
       class FormelementWithDynamicFields < Formelement
 
         include MMFormElemts
@@ -267,6 +258,17 @@ module Forms
       end
 
 
+      class Text < FormelementWithDynamicFields
+      end
+
+      class Textarea < FormelementWithDynamicFields
+        def tag
+          "<div class='%s'>%s<textarea%s>%s</textarea></div>" % [css_cls, label, tag_ident, value, label, content]
+        end
+      end
+
+
+
       class Checkbox < FormelementWithDynamicFields
 
         def selected(k)
@@ -284,7 +286,7 @@ module Forms
           str = ""
           if @opts
             @opts.first.each_pair do |k, v|
-              str << "<input%s type='checkbox' name='%s[]' value='%s' %s/>%s" % [get_attr, tag_id, k, selected(k), v]
+              str << "<span class='form-checkbox'><input%s type='checkbox' name='%s[]' value='%s' %s/>%s</span>" % [get_attr, tag_id, k, selected(k), v]
             end
           end
           str
