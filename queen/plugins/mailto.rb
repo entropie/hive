@@ -1,7 +1,17 @@
 module HiveMailer
-  # Mail.defaults do
-  #   delivery_method :logger
-  # end unless Queen::BEEHIVE.production?
+  
+  Mail.defaults do
+    #delivery_method :logger
+    delivery_method :smtp, {
+                      :address              => "smtp.gmail.com",
+                      :port                 => 587,
+                      :authentication       => 'plain',
+                      :user_name            => 'mictro@gmail.com',
+                      :domain               => 'schwierige-felle.de',
+                      :password             => begin File.readlines( File.expand_path('~/.gmailpw') ).join rescue "" end,
+                      :enable_starttls_auto => true  }
+
+  end
   
   def Mailer(ident, content, html_content)
     #template = File.readlines( beehive.view_path("mail/#{ident}.haml") ).join
