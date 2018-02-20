@@ -4,7 +4,7 @@ module HiveMailer
   end unless Queen::BEEHIVE.production?
   
   def Mailer(ident, content, html_content)
-    template = File.readlines( beehive.view_path("mail/#{ident}.haml") ).join
+    #template = File.readlines( beehive.view_path("mail/#{ident}.haml") ).join
 
     m = Mail.new do
       to         "michael@schwierige-felle.de"
