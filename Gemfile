@@ -14,6 +14,7 @@ gem "sequel", "=3.44.0"
 gem 'ramaze'
 gem "mongrel", '>= 1.2.0.pre2'
 gem "faker"
+gem "RedCloth" #, "=2.15.0"
 gem "bacon"
 gem "dalli"
 gem "i18n", "=0.6.9"
